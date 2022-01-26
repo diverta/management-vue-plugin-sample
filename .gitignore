@@ -1,0 +1,17 @@
+node_modules
+/dist
+/coverage
+
+# local env files
+.env.local
+.env.*.local
+
+# Log files
+npm-debug.log*
+npm-error.log*
+yarn-debug.log*
+yarn-error.log*
+
+# SSL stuffs
+req.cnf
+*.pem
