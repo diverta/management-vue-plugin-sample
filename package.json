@@ -16,10 +16,11 @@
     "build": "cross-env WEBPACK_MODE=production webpack"
   },
   "dependencies": {
+    "axios": "^0.25.0",
     "vue": "^2.6.6"
   },
   "devDependencies": {
-    "@babel/cli": "^7.4.4",
+    "@babel/cli": "^7.16.8",
     "@babel/core": "^7.4.5",
     "@babel/plugin-proposal-object-rest-spread": "^7.4.4",
     "@babel/plugin-transform-arrow-functions": "^7.2.0",
@@ -28,7 +29,7 @@
     "babel-7-jest": "^21.3.3",
     "babel-core": "7.0.0-bridge.0",
     "babel-loader": "^8.0.6",
-    "browserslist": "^4.6.0",
+    "browserslist": "^4.19.1",
     "caniuse-lite": "^1.0.30000971",
     "clean-webpack-plugin": "^2.0.2",
     "cross-env": "^5.1.4",
