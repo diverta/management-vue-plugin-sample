@@ -50,16 +50,16 @@
                 </div>
             </div>
             <hr />
-            <div v-for="(group, index1) in ext_items" :key="'group_' + index1" class="row mb-3">
-                <div v-for="(row, index2) in group" :key="'group_row' + index2">
+            <div v-for="(group, indexGroup) in ext_items" :key="'group_' + indexGroup" class="row mb-3">
+                <div v-for="(row, indexRow) in group" :key="'group_row' + indexRow">
                     <div v-if="row.items.length > 1" class="row">
                         <div class="col-md-2"></div>
                         <div class="col-md-10 card bg-light">
                             <div class="card-body">
-                                <span class="text-success">&nbsp;{{ index2 + 1 }}/{{ group.length }}</span>
-                                <div v-for="(item, index3) in row.items" :key="'item_' + index3" class="mb-2">
+                                <span class="text-success">&nbsp;{{ indexRow + 1 }}/{{ group.length }}</span>
+                                <div v-for="(item, indexItem) in row.items" :key="'item_' + indexItem" class="mb-2">
                                     <div class="row mb-1">
-                                        <label :for="item.ext_col_nm + '_' + index3" class="col">{{
+                                        <label :for="item.ext_col_nm + '_' + indexItem" class="col">{{
                                             item.ext_title
                                         }}</label>
                                     </div>
@@ -68,7 +68,8 @@
                                             <input
                                                 type="text"
                                                 class="form-control"
-                                                :id="item.ext_col_nm + '_' + index3"
+                                                :id="item.ext_col_nm + '_' + indexItem"
+                                                v-model="topics.ext[item.ext_index][indexRow]"
                                             />
                                         </div>
                                     </div>
@@ -77,13 +78,18 @@
                         </div>
                     </div>
                     <div v-else>
-                        <div v-for="(item, index3) in row.items" :key="'item_' + index3" class="row mb-3">
-                            <label :for="item.ext_col_nm + '_' + index3" class="col-md-2 d-flex justify-content-end"
+                        <div v-for="(item, indexItem) in row.items" :key="'item_' + indexItem" class="row mb-3">
+                            <label :for="item.ext_col_nm + '_' + indexItem" class="col-md-2 d-flex justify-content-end"
                                 >{{ item.ext_title
-                                }}<span class="text-success">&nbsp;{{ index2 + 1 }}/{{ group.length }}</span>
+                                }}<span class="text-success">&nbsp;{{ indexRow + 1 }}/{{ group.length }}</span>
                             </label>
                             <div class="col-md-10">
-                                <input type="text" class="form-control" :id="item.ext_col_nm + '_' + index3" />
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    :id="item.ext_col_nm + '_' + indexItem"
+                                    v-model="topics.ext[item.ext_index][indexRow]"
+                                />
                             </div>
                         </div>
                     </div>
@@ -150,6 +156,7 @@ export default {
     mounted() {
         this.topics = this.formData;
         this.topics.topics_group_id = this.topics_group_id;
+        console.log(this.ext_items);
         console.log(this.topics);
     },
     methods: {
