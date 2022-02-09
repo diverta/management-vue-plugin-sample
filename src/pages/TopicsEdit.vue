@@ -170,22 +170,19 @@
             <div class="row mb-3">
                 <label for="restriction" class="col-md-2 d-flex justify-content-end">Related tags </label>
                 <div class="col-md-10">
-                    <div v-for="category in tagOptions" :key="category.tag_category_id">
-                        <div class="row mb-1">
-                            <label class="col">{{ category.tag_category_nm }}</label>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col">
-                                <multiselect
-                                    placeholder="Search and add a tag"
-                                    label="tag_nm"
-                                    track-by="tag_id"
-                                    :options="category.tags"
-                                    :multiple="true"
-                                    :taggable="true"
-                                    v-model="selectedTags[category.tag_category_id]"
-                                ></multiselect>
-                            </div>
+                    <div class="row mb-3">
+                        <div class="col">
+                            <multiselect
+                                placeholder="Search and add a tag"
+                                label="tag_nm"
+                                track-by="tag_id"
+                                :options="tagOptions"
+                                :multiple="true"
+                                :group-select="true"
+                                v-model="selectedTags"
+                                group-values="tags"
+                                group-label="category"
+                            ></multiselect>
                         </div>
                     </div>
                 </div>
@@ -255,7 +252,7 @@ export default {
         return {
             topics: {},
             tagOptions: [],
-            selectedTags: {},
+            selectedTags: [],
             isLoading: false,
             errors: [],
             messages: [],
@@ -266,9 +263,7 @@ export default {
         this.topics.topics_group_id = this.topics_group_id;
         this.topics.secure_level = JSON.parse(this.topics.secure_level);
         this.tagOptions = await this.getTags();
-        console.log(this.tagOptions);
         this.initRelatedTags();
-        console.log(this.selectedTags);
     },
     methods: {
         async getTags() {
@@ -283,22 +278,22 @@ export default {
         },
         initRelatedTags() {
             for (const tag of this.relatedTags) {
-                if (!this.selectedTags.hasOwnProperty(tag.tag_category_id)) {
-                    this.selectedTags[tag.tag_category_id] = [];
-                }
-                this.selectedTags[tag.tag_category_id].push(this.sanitizeTag(tag));
+                this.selectedTags.push(this.sanitizeTag(tag));
             }
         },
         preprocessTagOptions(data) {
             const processedData = [];
             for (const category of data) {
                 const arrTags = Object.values(category.tags);
-                category.tags = [];
+                const newObj = {
+                    category: category.tag_category_nm,
+                    tags: [],
+                };
                 for (let i = 0; i < arrTags.length; i++) {
-                    category.tags.push(this.sanitizeTag(arrTags[i]));
+                    newObj.tags.push(this.sanitizeTag(arrTags[i]));
                 }
 
-                processedData.push(category);
+                processedData.push(newObj);
             }
             return processedData;
         },
@@ -318,7 +313,9 @@ export default {
                 const resp = await axios.post(config.API_URL + '/management/topics/topics_edit_api/', formData, {
                     headers: { 'content-type': 'multipart/form-data' },
                 });
-                this.messages = resp.data.messages;
+                if (resp.data.messages) {
+                    this.messages = resp.data.messages;
+                }
             } catch (error) {
                 if (error.response && error.response.data && Array.isArray(error.response.data.errors)) {
                     this.errors = error.response.data.errors;
@@ -355,13 +352,12 @@ export default {
                 formData.append('secure_level[' + i + ']', groups[i]);
             }
             let cntTag = 0;
-            const arrSelectedTags = Object.values(this.selectedTags);
-            for (let i = 0; i < arrSelectedTags.length; i++) {
-                const category = Object.values(arrSelectedTags[i]);
-                for (let j = 0; j < category.length; j++) {
-                    formData.append('tag_relation[' + cntTag + ']', category[j].tag_id);
-                    cntTag++;
-                }
+            for (let i = 0; i < this.selectedTags.length; i++) {
+                formData.append(
+                    'tag_relation[' + cntTag + ']',
+                    'tag:' + this.selectedTags[i].tag_id + ':' + this.selectedTags[i].tag_nm
+                );
+                cntTag++;
             }
             formData.append('contents', topics.contents);
             formData.append('ext_1[0]', topics.ext[1][0]);
