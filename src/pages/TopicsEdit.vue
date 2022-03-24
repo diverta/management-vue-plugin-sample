@@ -100,14 +100,14 @@
                                                     type="text"
                                                     class="form-control"
                                                     :id="item.ext_col_nm + '_' + indexItem"
-                                                    v-model="topics.ext[item.ext_index][indexRow]"
+                                                    v-model="topics.ext[item.ext_index + '_' + indexRow]"
                                                 />
                                             </div>
                                             <div v-if="item.ext_type == '1'">
                                                 <textarea
                                                     class="form-control"
                                                     :id="item.ext_col_nm + '_' + indexItem"
-                                                    v-model="topics.ext[item.ext_index][indexRow]"
+                                                    v-model="topics.ext[item.ext_index + '_' + indexRow]"
                                                 ></textarea>
                                             </div>
                                         </div>
@@ -127,7 +127,7 @@
                                     type="text"
                                     class="form-control"
                                     :id="item.ext_col_nm + '_' + indexItem"
-                                    v-model="topics.ext[item.ext_index][indexRow]"
+                                    v-model="topics.ext[item.ext_index + '_' + indexRow]"
                                 />
                             </div>
                         </div>
@@ -250,7 +250,10 @@ export default {
     },
     data() {
         return {
-            topics: {},
+            topics: {
+                secure_level: [],
+                ext: {},
+            },
             tagOptions: [],
             selectedTags: [],
             isLoading: false,
@@ -258,10 +261,25 @@ export default {
             messages: [],
         };
     },
+    created() {
+        for (const indexGroup in Object.entries(this.ext_items)) {
+            for (const indexRow in Object.entries(this.ext_items[indexGroup])) {
+                for (const indexItem in Object.entries(this.ext_items[indexGroup][indexRow].items)) {
+                    const item = this.ext_items[indexGroup][indexRow].items[indexItem];
+                    this.topics.ext[item.ext_index + '_' + indexRow] = '';
+                }
+            }
+        }
+    },
     async mounted() {
-        this.topics = this.formData;
+        if (this.formData.ext === null || this.formData.ext === undefined) {
+            this.formData.ext = this.topics.ext;
+        }
+        this.topics = { ...this.topics, ...this.formData };
         this.topics.topics_group_id = this.topics_group_id;
-        this.topics.secure_level = JSON.parse(this.topics.secure_level);
+        if (typeof this.topics.secure_level === 'string') {
+            this.topics.secure_level = JSON.parse(this.topics.secure_level);
+        }
         this.tagOptions = await this.getTags();
         this.initRelatedTags();
     },
@@ -360,13 +378,16 @@ export default {
                 cntTag++;
             }
             formData.append('contents', topics.contents);
-            formData.append('ext_1[0]', topics.ext[1][0]);
-            formData.append('ext_1[1]', topics.ext[1][1]);
-            formData.append('ext_2[0]', topics.ext[2][0]);
-            formData.append('ext_2[1]', topics.ext[2][1]);
-            formData.append('ext_2[2]', topics.ext[2][2]);
-            formData.append('ext_3[0]', topics.ext[3][0]);
-            formData.append('ext_3[1]', topics.ext[3][1]);
+
+            // This is statically processed to simplify things
+            // If you want it to be dynamic based on content-structure setting,
+            // please use the setting information from ext_items props
+            formData.append('ext_1[0]', topics.ext['1_0']);
+            formData.append('ext_1[1]', topics.ext['1_1']);
+            formData.append('ext_1[2]', topics.ext['1_2']);
+            formData.append('ext_2[0]', topics.ext['2_0']);
+            formData.append('ext_2[1]', topics.ext['2_1']);
+            formData.append('ext_2[2]', topics.ext['2_2']);
             return formData;
         },
     },
