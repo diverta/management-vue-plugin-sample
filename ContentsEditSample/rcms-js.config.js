@@ -1,5 +1,5 @@
 module.exports = {
-    name: 'FrontTopicsEditPluginDemo',
+    name: 'ContentsEditSample',
     path: 'dist',
     publicPath: '/files/user/js/front-topics-edit-plugin-demo/',
 
