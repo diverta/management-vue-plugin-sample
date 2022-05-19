@@ -87,20 +87,4 @@ npm run build
 
 ## Deploying
 
-ファイルマネージャで `dist/` の中身を `/files/user/js/front-topics-edit-plugin-demo/` にあげてください。
-
-## Using
-
-対象テンプレートに以下の Smarty plugin を使ってください。
-
-HomePage:
-
-```
-{rcms_vue_component name="home-page" url="/files/user/js/front-topics-edit-plugin-demo/" keys="vendors.*;HomePage.*"}
-```
-
-HelloPage:
-
-```
-{rcms_vue_component name="hello-page" url="/files/user/js/front-topics-edit-plugin-demo/" keys="vendors.*;HelloPage.*"}
-```
+ファイルマネージャで `dist/` の中身を `/files/user/mng_vue_components/` にあげてください。

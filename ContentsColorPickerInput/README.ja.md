@@ -65,5 +65,5 @@ npm run build
 
 ## Deploying
 
-ファイルマネージャで `dist/` の中身を `/files/user/js/front-topics-edit-plugin-demo/` にあげてください。
+ファイルマネージャで `dist/` の中身を `/files/user/mng_vue_components/` にあげてください。
 
