@@ -12,8 +12,9 @@ export default {
     components: {
         'chrome-picker': Chrome,
     },
-    props: ['extConfig'],
+    props: ['extConfig', 'test'],
     mounted: function() {
+        console.log(this.extConfig);
         this.colorCode = this.extConfig[0].value;
     },
     data() {

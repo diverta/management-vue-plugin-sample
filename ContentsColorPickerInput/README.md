@@ -66,4 +66,4 @@ npm run build
 
 ## Deploying
 
-Copy the contents of `dist/` to `/files/user/js/front-topics-edit-plugin-demo/`。
+Copy the contents of `dist/` to `/files/user/mng_vue_components/`。
