@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const { DefinePlugin } = require('webpack');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
@@ -70,6 +71,9 @@ module.exports = {
     ],
   },
   plugins: [
+    new DefinePlugin({
+      rcms_js_config: JSON.stringify(config),
+    }),
     new VueLoaderPlugin(),
     new CleanWebpackPlugin(),
     new ManifestPlugin({ publicPath: '' }),
