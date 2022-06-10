@@ -115,7 +115,6 @@ module.exports = {
     host: config.devHost,
     port: config.devPort,
     publicPath: config.publicPath,
-    disableHostCheck: true,
     headers: {
       'Access-Control-Allow-Origin': '*',
     },
