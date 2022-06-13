@@ -7,6 +7,9 @@
     </td>
 </template>
 <script>
+import Vue from 'vue';
+window.rcmsJS.vue.registerVM(Vue, rcms_js_config.publicPath); // eslint-disable-line
+
 import { Chrome } from 'vue-color';
 export default {
     components: {
@@ -14,7 +17,6 @@ export default {
     },
     props: ['extConfig', 'test'],
     mounted: function() {
-        console.log(this.extConfig);
         this.colorCode = this.extConfig[0].value;
     },
     data() {

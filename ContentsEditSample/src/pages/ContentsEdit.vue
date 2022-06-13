@@ -226,6 +226,9 @@
     </div>
 </template>
 <script>
+import Vue from 'vue';
+window.rcmsJS.vue.registerVM(Vue, rcms_js_config.publicPath); // eslint-disable-line
+
 import axios from 'axios';
 import config from '@/common/config';
 import Multiselect from 'vue-multiselect';
