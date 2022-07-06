@@ -7,7 +7,7 @@
             :data-ext_type="$attrs.ext_type"
             :data-default_value="$attrs.default_value"
         >
-            <textarea :name="$attrs.name" rows="4" cols="60" />
+            <textarea :name="$attrs.name" :value="$attrs.value" rows="4" cols="60" />
         </dd>
     </div>
 </template>

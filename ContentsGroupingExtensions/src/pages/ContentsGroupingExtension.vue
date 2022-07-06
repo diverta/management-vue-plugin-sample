@@ -6,15 +6,15 @@
                     ...config.parent,
                 }"
                 @change="handleOnChangeParentDropdown"
-            />
-
-            <div v-for="childConfig in config.children" :key="childConfig.no">
-                <!-- eslint-disable-next-line vue/require-component-is -->
-                <component
-                    v-show="selectedIDs.includes(childConfig.no)"
-                    v-bind="{ ...getChildComponentProps(childConfig) }"
-                />
-            </div>
+            >
+                <div v-for="childConfig in config.children" :key="childConfig.no">
+                    <!-- eslint-disable-next-line vue/require-component-is -->
+                    <component
+                        v-show="selectedIDs.includes(childConfig.no)"
+                        v-bind="{ ...getChildComponentProps(childConfig) }"
+                    />
+                </div>
+            </ParentDropdown>
         </dl>
     </td>
 </template>
@@ -33,9 +33,7 @@ import ChildImage from '@/components/ChildImage.vue';
 import ChildText from '@/components/ChildText.vue';
 import ChildTextarea from '@/components/ChildTextarea.vue';
 
-// TODO sort by order_number
-// TODO 複数の親コンポーネントがある場合の動作確認
-// TODO データinsert/update/deleteの確認
+// TODO needs to remove value in unselected child?
 
 export default {
     props: {
@@ -66,7 +64,7 @@ export default {
             return childConfig => {
                 const extType = getExtTypeByValue(`${childConfig.ext_type}`);
                 return {
-                    is: `Child${extType}`,
+                    is: `Child${extType}`, // TODO create other child components other than text,textarea,file.
                     ...childConfig,
                 };
             };
@@ -76,9 +74,15 @@ export default {
         getConfigsBy(extType) {
             return this.extConfig.filter(({ ext_type }) => `${ext_type}` === `${extType}`);
         },
-        handleOnChangeParentDropdown({ value }) {
+        handleOnChangeParentDropdown(value) {
             this.selectedIDs = value.split(',');
         },
+        sortByExtOrderNumber(extA, extB) {
+            return extB.ext_order_no - extA.ext_order_no;
+        },
+    },
+    created() {
+        this.extConfig.sort(this.sortByExtOrderNumber);
     },
 };
 </script>
