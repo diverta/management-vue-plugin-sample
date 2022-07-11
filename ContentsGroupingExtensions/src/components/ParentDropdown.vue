@@ -35,7 +35,7 @@ export default {
     },
     methods: {
         getIsDefault(value) {
-            return this.$attrs.default_value === value;
+            return this.$attrs.default_value === value || this.$attrs.value === value;
         },
         handleOnChange(e) {
             this.$emit('change', e.target.value);

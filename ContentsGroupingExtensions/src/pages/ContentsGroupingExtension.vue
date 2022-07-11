@@ -1,5 +1,5 @@
 <template>
-    <td v-if="extConfig">
+    <td v-if="extConfig" :class="distinguishClassName">
         <dl>
             <ParentDropdown
                 v-bind="{
@@ -33,10 +33,10 @@ import ChildImage from '@/components/ChildImage.vue';
 import ChildText from '@/components/ChildText.vue';
 import ChildTextarea from '@/components/ChildTextarea.vue';
 
-// TODO needs to remove value in unselected child?
-
 export default {
+    name: 'ContentsGroupingExtension',
     props: {
+        request: { type: Object, required: false },
         extConfig: { type: Array, required: true },
     },
     components: {
@@ -49,6 +49,8 @@ export default {
         return {
             EXT_TYPE,
             selectedIDs: [],
+            // in order to determine what the index number the current component is (within iteratable extension), see `mounted()`.
+            distinguishClassName: 'js__contents-grouping-extension',
         };
     },
     computed: {
@@ -71,6 +73,22 @@ export default {
         },
     },
     methods: {
+        /**
+         * returns extConfig with merging its value as original value and stored value.
+         * stored value would have been generated when POST the form then failed, it consists of submitted form values.
+         * to restore and render that stored value in refreshed form, applies it as the default value.
+         * @param {*} extConfig single extConfig
+         */
+        getExtConfigWithStoredValue(extConfig, iteratableSelfComponentIndex) {
+            const name = extConfig.ext_col_nm;
+            const value = extConfig.value;
+            const restoredValue =
+                this.request && this.request[name] ? this.request[name][iteratableSelfComponentIndex] : undefined;
+            return {
+                ...extConfig,
+                value: restoredValue || value,
+            };
+        },
         getConfigsBy(extType) {
             return this.extConfig.filter(({ ext_type }) => `${ext_type}` === `${extType}`);
         },
@@ -83,6 +101,14 @@ export default {
     },
     created() {
         this.extConfig.sort(this.sortByExtOrderNumber);
+    },
+    mounted() {
+        // since multiple custom components do not have its index number, gets it from CSS picking.
+        const iteratableSelfComponentIndex =
+            window.document.querySelectorAll(`.${this.distinguishClassName}`).length - 1;
+        this.extConfig = this.extConfig.map(extConfig =>
+            this.getExtConfigWithStoredValue(extConfig, iteratableSelfComponentIndex)
+        );
     },
 };
 </script>
