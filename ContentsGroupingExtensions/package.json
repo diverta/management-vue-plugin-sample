@@ -16,9 +16,7 @@
     "build": "cross-env WEBPACK_MODE=production webpack"
   },
   "dependencies": {
-    "axios": "^0.25.0",
-    "vue": "^2.6.6",
-    "vue-multiselect": "^2.1.6"
+    "vue": "^2.6.6"
   },
   "devDependencies": {
     "@babel/cli": "^7.16.8",
@@ -53,6 +51,7 @@
     "postcss-preset-env": "^6.6.0",
     "postcss-simple-vars": "^5.0.2",
     "prettier": "^1.17.1",
+    "regenerator-runtime": "^0.13.9",
     "style-loader": "^0.23.1",
     "url-loader": "^1.1.2",
     "vue-jest": "^3.0.4",
