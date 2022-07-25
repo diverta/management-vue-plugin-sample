@@ -2,4 +2,10 @@
 
 [日本語](README.ja.md)
 
-See README for each subfolder for detailed instructions.
+See README for each subfolder(`./packages`) for detailed instructions.
+
+## Setup
+
+Run the following command first to install all the library in each subfolders:
+
+    npm install

@@ -1,5 +1,5 @@
 {
-  "name": "management-vue-plugin-sample",
+  "name": "contents-grouping-extensions",
   "version": "1.0.0",
   "main": "src/index.js",
   "license": "UNLICENSED",
@@ -7,7 +7,8 @@
   "scripts": {
     "lint": "eslint src --ext .js,.vue",
     "lint:fix": "eslint src --fix --ext .js,.vue",
-    "test": "jest --watchAll",
+    "test": "jest",
+    "test:watch": "jest --watchAll",
     "coverage": "jest --coverage",
     "serve": "cross-env WEBPACK_DEV_SERVER=true webpack-dev-server",
     "serve:https": "cross-env WEBPACK_DEV_SERVER=true RCMS_JS_HTTPS=true webpack-dev-server",
@@ -16,9 +17,7 @@
     "build": "cross-env WEBPACK_MODE=production webpack"
   },
   "dependencies": {
-    "axios": "^0.25.0",
-    "vue": "^2.6.6",
-    "vue-color": "^2.8.1"
+    "vue": "^2.6.6"
   },
   "devDependencies": {
     "@babel/cli": "^7.16.8",
@@ -53,6 +52,7 @@
     "postcss-preset-env": "^6.6.0",
     "postcss-simple-vars": "^5.0.2",
     "prettier": "^1.17.1",
+    "regenerator-runtime": "^0.13.9",
     "style-loader": "^0.23.1",
     "url-loader": "^1.1.2",
     "vue-jest": "^3.0.4",
