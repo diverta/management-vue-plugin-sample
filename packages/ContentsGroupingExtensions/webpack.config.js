@@ -35,8 +35,24 @@ module.exports = {
     module: {
         rules: [
             {
+                test: /src\/components\/ChildWysiwyg\/icons\//,
+                use: ['raw-loader'],
+            },
+            {
                 test: /ckeditor5-[^/\\]+[/\\]theme[/\\]icons[/\\][^/\\]+\.svg$/,
                 use: ['raw-loader'],
+            },
+            {
+                test: /\.(png|jpe?g|gif|svg|woff2?|eot|ttf|otf)$/,
+                loader: 'url-loader',
+                options: {
+                    name: '[name].[hash].[ext]',
+                    limit: 8192,
+                },
+                exclude: [
+                    /ckeditor5-[^/\\]+[/\\]theme[/\\]icons[/\\][^/\\]+\.svg$/,
+                    /src\/components\/ChildWysiwyg\/icons\//,
+                ],
             },
             {
                 test: /ckeditor5-[^/\\]+[/\\]theme[/\\].+\.css$/,
@@ -84,27 +100,6 @@ module.exports = {
                 test: /\.css$/,
                 use: [production ? MiniCssExtractPlugin.loader : 'vue-style-loader', 'css-loader', 'postcss-loader'],
                 exclude: /ckeditor5-[^/\\]+[/\\]theme[/\\].+\.css$/,
-            },
-            // TODO svg読み込みでエラー
-            {
-                test: /\.(png|jpe?g|gif|svg|woff2?|eot|ttf|otf)$/,
-                loader: 'url-loader',
-                options: {
-                    name: '[name].[hash].[ext]',
-                    limit: 8192,
-                },
-                exclude: [
-                    /ckeditor5-[^/\\]+[/\\]theme[/\\]icons[/\\][^/\\]+\.svg$/,
-                    /src\/components\/ChildWysiwyg\/icons\//,
-                ],
-            },
-            {
-                test: /src\/components\/ChildWysiwyg\/icons\//,
-                use: ['raw-loader'],
-            },
-            {
-                test: /ckeditor5-[^/\\]+[/\\]theme[/\\]icons[/\\][^/\\]+\.svg$/,
-                use: ['raw-loader'],
             },
         ],
     },

@@ -11,38 +11,37 @@ import '../style/fullscreen.css';
 export default class FullScreen extends Plugin {
     init() {
         const editor = this.editor;
-        const currentState = 'normal';
+        let currentState = 'normal';
 
         editor.ui.componentFactory.add('fullScreen', locale => {
             const view = new ButtonView(locale);
-            // TODO svg読み込みでエラー
-            // view.set({
-            //     label: 'FullScreen',
-            //     tooltip: true,
-            //     icon: ImageFullBig,
-            // });
-            // view.on('execute', () => {
-            //     if (currentState === 'normal') {
-            //         editor.sourceElement.parentNode.classList.add('ckeditor-fullscreen-wrap');
-            //         editor.sourceElement.nextElementSibling.classList.add('ckeditor-fullscreen-mode');
-            //         view.set({
-            //             label: 'Normal',
-            //             tooltip: true,
-            //             icon: ImageFullCancel,
-            //         });
-            //         currentState = 'full';
-            //     } else {
-            //         editor.sourceElement.parentNode.classList.remove('ckeditor-fullscreen-wrap');
-            //         editor.sourceElement.nextElementSibling.classList.remove('ckeditor-fullscreen-mode');
-            //         view.set({
-            //             label: 'FullScreen',
-            //             tooltip: true,
-            //             icon: ImageFullBig,
-            //         });
-            //         currentState = 'normal';
-            //     }
-            //     editor.fire('fullscreenMode');
-            // });
+            view.set({
+                label: 'FullScreen',
+                tooltip: true,
+                icon: ImageFullBig,
+            });
+            view.on('execute', () => {
+                if (currentState === 'normal') {
+                    editor.sourceElement.parentNode.classList.add('ckeditor-fullscreen-wrap');
+                    editor.sourceElement.nextElementSibling.classList.add('ckeditor-fullscreen-mode');
+                    view.set({
+                        label: 'Normal',
+                        tooltip: true,
+                        icon: ImageFullCancel,
+                    });
+                    currentState = 'full';
+                } else {
+                    editor.sourceElement.parentNode.classList.remove('ckeditor-fullscreen-wrap');
+                    editor.sourceElement.nextElementSibling.classList.remove('ckeditor-fullscreen-mode');
+                    view.set({
+                        label: 'FullScreen',
+                        tooltip: true,
+                        icon: ImageFullBig,
+                    });
+                    currentState = 'normal';
+                }
+                editor.fire('fullscreenMode');
+            });
             return view;
         });
     }
