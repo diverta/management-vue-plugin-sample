@@ -6,6 +6,9 @@ export const EXT_TYPE = {
     Textarea: 1,
     Selectbox: 2,
     Image: 4,
+    // MultipleCheckbox: 5,
+    Wysiwyg: 6,
+    // Link: 7
 };
 
 export const getExtTypeByValue = value => {

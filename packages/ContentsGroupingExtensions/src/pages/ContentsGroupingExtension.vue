@@ -32,6 +32,7 @@ import ParentDropdown from '@/components/ParentDropdown.vue';
 import ChildImage from '@/components/ChildImage.vue';
 import ChildText from '@/components/ChildText.vue';
 import ChildTextarea from '@/components/ChildTextarea.vue';
+import ChildWysiwyg from '@/components/ChildWysiwyg/index.vue';
 
 export default {
     name: 'ContentsGroupingExtension',
@@ -44,6 +45,7 @@ export default {
         ChildImage,
         ChildText,
         ChildTextarea,
+        ChildWysiwyg,
     },
     data() {
         return {
@@ -65,8 +67,15 @@ export default {
         getChildComponentProps() {
             return childConfig => {
                 const extType = getExtTypeByValue(`${childConfig.ext_type}`);
+                if (extType === undefined) {
+                    // eslint-disable-next-line no-console
+                    console.warn(`could not resolve specified extension type: ${childConfig.ext_type}`);
+                    return {
+                        is: 'template', // just for go through component rendering error without `is` prop.
+                    };
+                }
                 return {
-                    is: `Child${extType}`, // TODO create other child components other than text,textarea,file.
+                    is: `Child${extType}`,
                     ...childConfig,
                 };
             };
