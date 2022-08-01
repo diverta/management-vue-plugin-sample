@@ -5,6 +5,7 @@ import ChildTextarea from '@/components/ChildTextarea.vue';
 import ChildWysiwyg from '@/components/ChildWysiwyg/index.vue';
 import ChildMultipleCheckbox from '@/components/ChildMultipleCheckbox.vue';
 import ChildLink from '@/components/ChildLink.vue';
+import ChildTextAutocomplete from '@/components/ChildTextAutocomplete.vue';
 
 export default {
     ParentDropdown,
@@ -14,4 +15,5 @@ export default {
     ChildWysiwyg,
     ChildMultipleCheckbox,
     ChildLink,
+    ChildTextAutocomplete,
 };
