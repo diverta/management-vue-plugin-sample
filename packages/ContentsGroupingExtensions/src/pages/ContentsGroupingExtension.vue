@@ -27,14 +27,7 @@ window.rcmsJS.vue.registerVM(Vue, rcms_js_config.publicPath); // eslint-disable-
 
 import { EXT_TYPE, getExtTypeByValue } from '@/common/const.js';
 
-import ParentDropdown from '@/components/ParentDropdown.vue';
-
-import ChildImage from '@/components/ChildImage.vue';
-import ChildText from '@/components/ChildText.vue';
-import ChildTextarea from '@/components/ChildTextarea.vue';
-import ChildWysiwyg from '@/components/ChildWysiwyg/index.vue';
-import ChildMultipleCheckbox from '@/components/ChildMultipleCheckbox.vue';
-import ChildLink from '@/components/ChildLink.vue';
+import components from '@/components/index';
 
 export default {
     name: 'ContentsGroupingExtension',
@@ -43,13 +36,7 @@ export default {
         extConfig: { type: Array, required: true },
     },
     components: {
-        ParentDropdown,
-        ChildImage,
-        ChildText,
-        ChildTextarea,
-        ChildWysiwyg,
-        ChildMultipleCheckbox,
-        ChildLink,
+        ...components,
     },
     data() {
         return {
