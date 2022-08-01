@@ -54,7 +54,7 @@ export default {
 
     methods: {
         async createEditor() {
-            const config = buildConfig({ ...this.$attrs, ...(this.$attrs.opts || {}) });
+            const config = buildConfig({ ...this.$attrs, ...(this.$attrs.options || {}) });
             try {
                 this.editor = await ClassicEditor.create(this.$refs['editor'], config);
                 this.editor.on('fullscreenMode', this.fullscreenMode);
