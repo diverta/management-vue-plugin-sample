@@ -21,40 +21,6 @@ import ClassicEditor from '@ckeditor/ckeditor5-editor-classic/src/classiceditor'
 import 'vue-select/dist/vue-select.css';
 
 export default {
-    props: {
-        name: {
-            type: String,
-            default: '',
-        },
-        value: {
-            type: String,
-            default: '',
-        },
-        opts: {
-            default: () => ({}),
-        },
-        delay: {
-            type: Number,
-            default: 0,
-        },
-        lang: {
-            type: String,
-            default: 'ja',
-        },
-        ckfinder: {
-            type: String,
-            default: '',
-        },
-        upload_dir: {
-            type: String,
-            default: '',
-        },
-        resource_path: {
-            type: String,
-            default: '',
-        },
-    },
-
     computed: {
         cssProps() {
             return {
@@ -70,11 +36,11 @@ export default {
             fullscreen: false,
             // customPluginList: [],
             editor: null,
-            editorValue: this.value || '',
-            customCss: this.opts.custom_css || '',
-            wysiwygWidth: this.opts.width || 800,
-            wysiwygHeight: this.opts.width || 200,
-            resourcePath: this.opts.resource || '',
+            editorValue: this.$attrs.value || '',
+            customCss: this.$attrs.custom_css || '',
+            wysiwygWidth: this.$attrs.width || 800,
+            wysiwygHeight: this.$attrs.width || 200,
+            resourcePath: this.$attrs.resource || '',
             selection: null,
             range: null,
             flask: null,
@@ -88,7 +54,7 @@ export default {
 
     methods: {
         async createEditor() {
-            const config = buildConfig({ ...this.$props, ...this.opts });
+            const config = buildConfig({ ...this.$attrs, ...(this.$attrs.opts || {}) });
             try {
                 this.editor = await ClassicEditor.create(this.$refs['editor'], config);
                 this.editor.on('fullscreenMode', this.fullscreenMode);

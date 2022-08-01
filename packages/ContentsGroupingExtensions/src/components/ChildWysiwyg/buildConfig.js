@@ -9,7 +9,7 @@ const CKFINDER_UPLOAD_URL =
 
 export function createCkfinderConfig(option = {}) {
     const url = new URL(CKFINDER_UPLOAD_URL, location.origin);
-    if (option.upload_dir !== '') {
+    if (option.upload_dir && option.upload_dir !== '') {
         url.searchParams.set('currentFolder', option.upload_dir);
     }
     const resourcePath = option.resourcePath || '';
