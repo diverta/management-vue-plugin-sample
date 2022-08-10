@@ -110,7 +110,7 @@ export default function buildConfig(option = {}) {
             },
             styles: ['alignLeft', 'alignCenter', 'alignRight'],
         },
-        language: option.lang || 'en',
+        language: option.lang || 'ja', // TODO
         plugins,
         ckfinder: createCkfinderConfig(option),
         table: {

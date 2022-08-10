@@ -9,7 +9,11 @@ export const EXT_TYPE = {
     MultipleCheckbox: 5,
     Wysiwyg: 6,
     Link: 7,
-    TextAutocomplete: 13,
+    // TextAutocomplete: 13,
+    // RelationField: 20,
+    // Html: 21,
+    // ApiField: 32,
+    // Counter: 34,
 };
 
 export const getExtTypeByValue = value => {

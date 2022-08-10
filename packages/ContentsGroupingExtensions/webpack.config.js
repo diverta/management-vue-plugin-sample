@@ -7,6 +7,7 @@ const ManifestPlugin = require('webpack-manifest-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const CKEditorWebpackPlugin = require('@ckeditor/ckeditor5-dev-webpack-plugin');
 const { styles } = require('@ckeditor/ckeditor5-dev-utils');
@@ -114,9 +115,10 @@ module.exports = {
             filename: serve ? '[name].[hash].css' : '[name].[contenthash].css',
         }),
         new CKEditorWebpackPlugin({
-            language: 'en',
+            language: 'ja',
             addMainLanguageTranslationsToAllAssets: true,
         }),
+        new BundleAnalyzerPlugin(),
     ],
     optimization: {
         minimizer: [
