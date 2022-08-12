@@ -27,7 +27,7 @@ window.rcmsJS.vue.registerVM(Vue, rcms_js_config.publicPath); // eslint-disable-
 
 import { EXT_TYPE, getExtTypeByValue } from '@/common/const.js';
 
-import components from '@/components/index';
+import * as components from '@/components/index';
 
 export default {
     name: 'ContentsGroupingExtension',
