@@ -1,12 +1,12 @@
 <template>
     <div v-if="!ck_error" ref="editor-wrap" :style="cssProps">
         <div ref="editor" v-html="editorValue"></div>
-        <textarea :name="name" v-model="editorValue" style="display: none"></textarea>
+        <textarea :name="$attrs.name" v-model="editorValue" style="display: none"></textarea>
         <link v-if="customCss" rel="stylesheet" :href="customCss" type="text/css" />
     </div>
     <div v-else>
         <textarea
-            :name="name"
+            :name="$attrs.name"
             v-html="editorValue"
             :style="{ width: `${wysiwygWidth}px`, height: `${wysiwygHeight + 42}px` }"
         ></textarea>

@@ -22,12 +22,12 @@
 <script>
 /* eslint-disable vue/no-unused-components */
 
+import ParentDropdown from '@/components/ParentDropdown.vue';
+
 import Vue from 'vue';
 window.rcmsJS.vue.registerVM(Vue, rcms_js_config.publicPath); // eslint-disable-line
 
 import { EXT_TYPE, getExtTypeByValue } from '@/common/const.js';
-
-import * as components from '@/components/index';
 
 export default {
     name: 'ContentsGroupingExtension',
@@ -36,7 +36,14 @@ export default {
         extConfig: { type: Array, required: true },
     },
     components: {
-        ...components,
+        ParentDropdown,
+        ChildImage: () => import(/* webpackChunkName: "ChildImage" */ '@/components/ChildImage.vue'),
+        ChildText: () => import(/* webpackChunkName: "ChildText" */ '@/components/ChildText.vue'),
+        ChildTextarea: () => import(/* webpackChunkName: "ChildTextarea" */ '@/components/ChildTextarea.vue'),
+        ChildWysiwyg: () => import(/* webpackChunkName: "ChildWysiwyg" */ '@/components/ChildWysiwyg/index.vue'),
+        ChildMultipleCheckbox: () =>
+            import(/* webpackChunkName: "ChildMultipleCheckbox" */ '@/components/ChildMultipleCheckbox.vue'),
+        ChildLink: () => import(/* webpackChunkName: "ChildLink" */ '@/components/ChildLink.vue'),
     },
     data() {
         return {

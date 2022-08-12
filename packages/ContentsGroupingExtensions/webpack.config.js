@@ -3,10 +3,10 @@ const path = require('path');
 const { DefinePlugin } = require('webpack');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
-const ManifestPlugin = require('webpack-manifest-plugin');
+const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-const VueLoaderPlugin = require('vue-loader/lib/plugin');
+const { VueLoaderPlugin } = require('vue-loader');
 
 // eslint-disable-next-line no-unused-vars
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
@@ -91,7 +91,7 @@ module.exports = {
                 exclude: /node_modules/,
             },
             {
-                test: /.vue$/,
+                test: /\.vue$/,
                 loader: 'vue-loader',
             },
             {
@@ -112,7 +112,7 @@ module.exports = {
         }),
         new VueLoaderPlugin(),
         new CleanWebpackPlugin(),
-        new ManifestPlugin({ publicPath: '' }),
+        new WebpackManifestPlugin({ publicPath: '' }),
         new MiniCssExtractPlugin({
             filename: serve ? '[name].[hash].css' : '[name].[contenthash].css',
         }),
@@ -123,10 +123,11 @@ module.exports = {
         // new BundleAnalyzerPlugin(),
     ],
     optimization: {
+        minimize: true,
         minimizer: [
             new TerserPlugin({
                 terserOptions: {
-                    ecma: 5,
+                    ecma: 2016,
                     compress: true,
                     output: {
                         comments: false,
@@ -155,7 +156,9 @@ module.exports = {
     devServer: {
         host: config.devHost,
         port: config.devPort,
-        publicPath: config.publicPath,
+        static: {
+            publicPath: config.publicPath,
+        },
         headers: {
             'Access-Control-Allow-Origin': '*',
         },
@@ -167,5 +170,6 @@ module.exports = {
                       ca: fs.readFileSync(config.httpsCa),
                   }
                 : config.https,
+        watchFiles: ['src/**/*'],
     },
 };
