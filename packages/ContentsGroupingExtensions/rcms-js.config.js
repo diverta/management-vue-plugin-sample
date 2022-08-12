@@ -1,5 +1,5 @@
 module.exports = {
-    name: 'ContentsEditSample',
+    name: 'ContentsGroupingExtensions',
     path: 'dist',
     publicPath: '/files/user/mng_vue_components',
 

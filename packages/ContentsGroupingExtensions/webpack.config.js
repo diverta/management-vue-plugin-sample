@@ -1,12 +1,16 @@
 const fs = require('fs');
 const path = require('path');
+
+const webpack = require('webpack');
+
 const { DefinePlugin } = require('webpack');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-const VueLoaderPlugin = require('vue-loader/lib/plugin');
+const { VueLoaderPlugin } = require('vue-loader');
+const ESLintPlugin = require('eslint-webpack-plugin');
 
 // eslint-disable-next-line no-unused-vars
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
@@ -81,16 +85,6 @@ module.exports = {
                 ],
             },
             {
-                enforce: 'pre',
-                test: /\.(js|vue)$/,
-                loader: 'eslint-loader',
-                options: {
-                    failOnError: !eslintNoFail,
-                    emitWarning: eslintNoFail,
-                },
-                exclude: /node_modules/,
-            },
-            {
                 test: /.vue$/,
                 loader: 'vue-loader',
             },
@@ -111,6 +105,10 @@ module.exports = {
             rcms_js_config: JSON.stringify(config),
         }),
         new VueLoaderPlugin(),
+        new webpack.DefinePlugin({
+            __VUE_OPTIONS_API__: true,
+            __VUE_PROD_DEVTOOLS__: false,
+        }),
         new CleanWebpackPlugin(),
         new ManifestPlugin({ publicPath: '' }),
         new MiniCssExtractPlugin({
@@ -119,6 +117,10 @@ module.exports = {
         new CKEditorWebpackPlugin({
             language: 'ja',
             addMainLanguageTranslationsToAllAssets: true,
+        }),
+        new ESLintPlugin({
+            failOnError: !eslintNoFail,
+            emitWarning: eslintNoFail,
         }),
         // new BundleAnalyzerPlugin(),
     ],

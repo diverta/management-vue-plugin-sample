@@ -6,7 +6,8 @@
         "jest/globals": true
     },
     "parserOptions": {
-        "sourceType": "module"
+        "sourceType": "module",
+        "ecmaVersion": 2020
     },
     "plugins": ["jest"],
     "extends": ["plugin:vue/essential", "eslint:recommended", "plugin:jest/recommended", "plugin:prettier/recommended"],
