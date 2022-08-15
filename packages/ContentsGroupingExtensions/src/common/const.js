@@ -9,6 +9,7 @@ export const EXT_TYPE = {
     MultipleCheckbox: 5,
     Wysiwyg: 6,
     Link: 7,
+    FileManager: 30,
     // TextAutocomplete: 13,
     // RelationField: 20,
     // Html: 21,
