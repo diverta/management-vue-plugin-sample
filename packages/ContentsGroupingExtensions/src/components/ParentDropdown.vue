@@ -7,7 +7,13 @@
             :data-ext_type="$attrs.ext_type"
             :data-default_value="$attrs.default_value"
         >
-            <select :name="$attrs.name" @change="handleOnChange" ref="select">
+            <select
+                :name="$attrs.name"
+                @change="handleOnChange"
+                ref="select"
+                @input="() => (selected = true)"
+                v-model="selected"
+            >
                 <option v-if="!required" value="" selected>選択なし</option>
                 <option
                     v-for="[value, key] in Object.entries($attrs.options)"
@@ -15,7 +21,6 @@
                     :label="key"
                     :data-key="key"
                     :value="value"
-                    :selected="getIsDefault(value)"
                 >
                     {{ key }}
                 </option>
@@ -28,6 +33,11 @@
 
 <script>
 export default {
+    data() {
+        return {
+            selected: '',
+        };
+    },
     computed: {
         required() {
             return this.$attrs.limits && this.$attrs.limits.required !== undefined;
@@ -35,6 +45,9 @@ export default {
     },
     methods: {
         getIsDefault(value) {
+            if (this.selected) {
+                return false;
+            }
             return this.$attrs.default_value === value || this.$attrs.value === value;
         },
         handleOnChange(e) {
@@ -42,9 +55,12 @@ export default {
         },
     },
     mounted() {
-        if (this.$refs.select.value !== '') {
-            this.$emit('change', this.$refs.select.value);
-        }
+        this.selected = this.$attrs.default_value || this.$attrs.value || '';
+        this.$nextTick(() => {
+            if (this.$refs.select.value !== '') {
+                this.$emit('change', this.$refs.select.value);
+            }
+        });
     },
 };
 </script>

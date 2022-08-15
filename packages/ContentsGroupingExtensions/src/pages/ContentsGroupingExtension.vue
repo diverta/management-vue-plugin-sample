@@ -10,8 +10,11 @@
                 <div v-for="childConfig in config.children" :key="childConfig.no">
                     <!-- eslint-disable-next-line vue/require-component-is -->
                     <component
-                        v-show="selectedIDs.includes(childConfig.no)"
-                        v-bind="{ ...getChildComponentProps(childConfig) }"
+                        v-show="getIsActivated(childConfig)"
+                        v-bind="{
+                            ...getChildComponentProps(childConfig),
+                            activated: getIsActivated(childConfig),
+                        }"
                     />
                 </div>
             </ParentDropdown>
@@ -61,6 +64,9 @@ export default {
                 parent,
                 children,
             };
+        },
+        getIsActivated() {
+            return childConfig => this.selectedIDs.includes(childConfig.no);
         },
         getChildComponentProps() {
             return childConfig => {

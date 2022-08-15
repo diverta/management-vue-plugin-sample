@@ -48,10 +48,6 @@ export default {
         };
     },
 
-    mounted() {
-        this.createEditor();
-    },
-
     methods: {
         async createEditor() {
             const config = buildConfig({ ...this.$attrs, ...(this.$attrs.options || {}) });
@@ -69,6 +65,18 @@ export default {
         },
         handleOnChange() {
             this.editorValue = this.editor.getData();
+        },
+    },
+
+    watch: {
+        '$attrs.activated': {
+            immediate: true,
+            deep: true,
+            handler(activated) {
+                if (activated && !this.editor) {
+                    this.$nextTick(() => this.createEditor());
+                }
+            },
         },
     },
 };
