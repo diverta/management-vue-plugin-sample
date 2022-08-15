@@ -44,12 +44,6 @@ export default {
         },
     },
     methods: {
-        getIsDefault(value) {
-            if (this.selected) {
-                return false;
-            }
-            return this.$attrs.default_value === value || this.$attrs.value === value;
-        },
         handleOnChange(e) {
             this.$emit('change', e.target.value);
         },
