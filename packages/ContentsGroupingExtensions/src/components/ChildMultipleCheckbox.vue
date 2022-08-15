@@ -10,7 +10,7 @@
             <label
                 v-for="[key, value] in Object.entries($attrs.options)"
                 style="margin-right: 10px; white-space: nowrap;"
-                :key="`${$attrs.name}_${key}`"
+                :key="`${$attrs.name}_${key}_${value}`"
             >
                 <input type="checkbox" :name="$attrs.name" :value="key" :checked="getIsChecked(key)" />
                 {{ value }}
