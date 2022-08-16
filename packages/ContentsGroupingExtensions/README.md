@@ -1,8 +1,57 @@
-# ContentsEditSample
+# ContentsGroupingExtension
 
 [日本語](README.ja.md)
 
-Frontend code for ContentsEditSample.
+Frontend code for ContentsGroupingExtension.
+
+---
+
+## Usecase
+
+A plugin that customes contents edit screen for grouping/select child extensions through parent extension.
+
+To begin with,  
+Kuroco dashboard does not handle show/hide in each child component,  
+renders every of them.  
+This plugin will render just only one parent component as a dropdown list element which hides non-selected child extensions.
+
+Note we will hold every values even those inactive child extensions are there.
+
+## Define parent-childrens extension
+
+-   Parent extension has to be **dropdown list**.
+-   Child extensions need to apply the parent extension as the parent.
+-   Need to input child extension's ID in parent config to link child extensions with parent extension.
+    -   See parernt extension configuration in below image as an example.
+    -   Child extension's ID can be multiple, identify them with using `,` as a splitting anchor in that case.
+
+[![Image from Gyazo](https://t.gyazo.com/teams/diverta/4c26f1fb1841b6742fe0eae4354265bb.png)](https://diverta.gyazo.com/4c26f1fb1841b6742fe0eae4354265bb)
+
+The result image is like below.
+
+[![Image from Gyazo](https://t.gyazo.com/teams/diverta/89d2906511a6fb1dd1ed034c4d72e16e.png)](https://diverta.gyazo.com/89d2906511a6fb1dd1ed034c4d72e16e)
+
+---
+
+## :construction: Support extensions
+
+Currently, we still be in progress to develop existing extensions, some are not implemented.  
+If you want it other than ones done, please raise an issue or give us a PR.
+
+Check the available extensions below.
+
+| extension name   | note |
+| ---------------- | ---- |
+| Text             |      |
+| Textarea         |      |
+| Selectbox        |      |
+| Image            |      |
+| MultipleCheckbox |      |
+| Wysiwyg          |      |
+| Link             |      |
+| FileManager      |      |
+
+---
 
 ## Prerequisites
 
@@ -10,25 +59,9 @@ First, install the prerequisites.
 
 1. Node (<https://nodejs.org/>)
 
-## Prettier
-
-Prettier is used for code formatting.
-
-If a Prettier-related error occurs when linting, run `npm run lint:fix` to fix it automatically.
-Alternatively, configure your editor to format your code with Prettier on save.
-
-## ESLint
-
-ESLint is used for code linting.
-The build process is configures to fail if ESLint fails.
-
-_(To disable failing build on ESLint error, set the environment variable `RCMS_ESLINT_NO_FAIL_DEV=1`.)_
-
-If an ESLint-related error occurs when building, try running `npm run lint:fix` to fix it automatically.
-
 ## Testing
 
-[Jest](https://facebook.github.io/jest/), [Vue Test Utils](https://vue-test-utils.vuejs.org/), etc. are used to implement automated tests.
+[Jest](https://facebook.github.io/jest/), [Vue Test Utils](https://vue-test-utils.vuejs.org/), etc.
 
 ## Project structure
 
@@ -41,15 +74,11 @@ The project structure is as shown below.
 |   `-- *  # Built code
 |-- src
 |   |-- index.js  # Index
-|   |-- common
-|   |   |-- *.test.js  # Unit tests
-|   |   `-- *.js  # Common scripts
+|   |-- common  # etcs
 |   |-- components
-|   |   |-- *.test.js  # Unit tests
-|   |   `-- *.vue  # Vue single file components
-`-- tests
-    `-- e2e
-        `-- *.test.js  # End-to-end tests
+|       |-- *.test.js  # Unit tests
+|       `-- *.vue  # Vue single file components
+`-- __test__  # for general tests using with Jest
 ```
 
 ## Developing
@@ -57,8 +86,6 @@ The project structure is as shown below.
 Before beginning development, the dependencies have to be installed by running `npm install`.
 
 `test` runs the automated tests every time the source files change.
-
-`watch` runs the build (for development) every time the source files change.
 
 `serve` runs the build (for development) with [HMR](https://webpack.js.org/concepts/hot-module-replacement/) every time the source files change.
 
@@ -89,4 +116,3 @@ npm run build
 ## Deploying
 
 Copy the contents of `dist/` to `/files/user/mng_vue_components/`。
-
