@@ -1,29 +1,60 @@
-# ContentsEditSample
+# ContentsGroupingExtension
 
 [English](README.md)
 
-ContentsEditSample のフロントエンドコードです。
+ContentsGroupingExtension のフロントエンドコードです。
+
+---
+
+## Usecase
+
+コンテンツ編集画面にて、親子の拡張項目をグループ化をするプラグインです。
+
+通常、Kuroco のコンテンツ定義で親子の拡張項目を定義した場合は、子項目を全て表示します。
+このプラグインでは親項目を子項目のドロップダウンリストとして表示し、  
+そこで指定されたアイテム以外は非表示にします。
+
+あくまで表示/非表示の機能ですので、未指定となり非表示となった子項目でも、その項目が保持する値は消去されないことにご注意ください。
+
+## Define parent-childrens extension
+
+-   親拡張項目は **選択項目** で定義してください。
+-   子拡張項目は親に上記親項目を設定してください。
+-   親拡張の設定では、子項目の ID を key として指定してください。
+    -   一例として、下の画像の親項目の設定をご確認ください。
+    -   子項目は一度に複数を選択することが可能です。この場合は`,`で区切ってください。
+
+[![Image from Gyazo](https://t.gyazo.com/teams/diverta/4c26f1fb1841b6742fe0eae4354265bb.png)](https://diverta.gyazo.com/4c26f1fb1841b6742fe0eae4354265bb)
+
+設定すると、コンテンツ編集画面は下の画像のようになります。
+
+[![Image from Gyazo](https://t.gyazo.com/teams/diverta/89d2906511a6fb1dd1ed034c4d72e16e.png)](https://diverta.gyazo.com/89d2906511a6fb1dd1ed034c4d72e16e)
+
+---
+
+## :construction: 対応拡張項目
+
+現状では, 既存のいくつかの種類の拡張項目は未作成で、順次対応中です。  
+下記対応済みの拡張項目以外のものについては, Issue をされるかプルリクエストをお願いします.
+
+| extension name   | note |
+| ---------------- | ---- |
+| Text             |      |
+| Textarea         |      |
+| Selectbox        |      |
+| Image            |      |
+| MultipleCheckbox |      |
+| Wysiwyg          |      |
+| Link             |      |
+| FileManager      |      |
+
+---
 
 ## Prerequisites
 
 まず、必要なものをインストールしてください。
 
 1. Node (<https://nodejs.org/>)
-
-## Prettier
-
-Prettier を使ってコードフォーマットを統一しています。
-
-Lint で Prettier に関するエラーが出たら、`npm run lint:fix` を実行するか、エディタで保存する度に Prettier を実行するように設定してください。
-
-## ESLint
-
-ESLint を使って静的検証を行っています。
-静的検証が失敗する場合はビルドできないようになっています。
-
-_(開発時に ESLint にエラー出ていてもビルドを失敗させないようにしたい場合は環境変数 `RCMS_ESLINT_NO_FAIL_DEV=1` を設定してください。)_
-
-ESLint によるエラーが発生した場合、まずは `npm run lint:fix` を実行してみてください。
 
 ## Test frameworks
 
@@ -40,15 +71,11 @@ ESLint によるエラーが発生した場合、まずは `npm run lint:fix` �
 |   `-- *  # Built code
 |-- src
 |   |-- index.js  # Index
-|   |-- common
-|   |   |-- *.test.js  # Unit tests
-|   |   `-- *.js  # Common scripts
+|   |-- common  # etcs
 |   |-- components
-|   |   |-- *.test.js  # Unit tests
-|   |   `-- *.vue  # Vue single file components
-`-- tests
-    `-- e2e
-        `-- *.test.js  # End-to-end tests
+|       |-- *.test.js  # Unit tests
+|       `-- *.vue  # Vue single file components
+`-- __test__  # for general tests using with Jest
 ```
 
 ## Developing
@@ -56,8 +83,6 @@ ESLint によるエラーが発生した場合、まずは `npm run lint:fix` �
 開発を始める前に、 `npm install` で依存関係をインストールする必要があります。
 
 `test` を起動してから編集すれば、ソースが変わると自動的にテストが実行される。
-
-`watch` を起動してから編集すれば、ソースが変わると自動的にビルドされる。
 
 `serve` を起動してから編集すれば、ソースが変わると自動的にビルドされ、[HMR](https://webpack.js.org/concepts/hot-module-replacement/) を通じてリロードされる。
 
