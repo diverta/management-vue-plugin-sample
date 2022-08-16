@@ -10,8 +10,11 @@
                 <div v-for="childConfig in config.children" :key="childConfig.no">
                     <!-- eslint-disable-next-line vue/require-component-is -->
                     <component
-                        v-show="selectedIDs.includes(childConfig.no)"
-                        v-bind="{ ...getChildComponentProps(childConfig) }"
+                        v-show="getIsActivated(childConfig)"
+                        v-bind="{
+                            ...getChildComponentProps(childConfig),
+                            activated: getIsActivated(childConfig),
+                        }"
                     />
                 </div>
             </ParentDropdown>
@@ -22,16 +25,12 @@
 <script>
 /* eslint-disable vue/no-unused-components */
 
+import ParentDropdown from '@/components/ParentDropdown.vue';
+
 import Vue from 'vue';
 window.rcmsJS.vue.registerVM(Vue, rcms_js_config.publicPath); // eslint-disable-line
 
 import { EXT_TYPE, getExtTypeByValue } from '@/common/const.js';
-
-import ParentDropdown from '@/components/ParentDropdown.vue';
-
-import ChildImage from '@/components/ChildImage.vue';
-import ChildText from '@/components/ChildText.vue';
-import ChildTextarea from '@/components/ChildTextarea.vue';
 
 export default {
     name: 'ContentsGroupingExtension',
@@ -41,9 +40,15 @@ export default {
     },
     components: {
         ParentDropdown,
-        ChildImage,
-        ChildText,
-        ChildTextarea,
+        ChildImage: () => import(/* webpackChunkName: "ChildImage" */ '@/components/ChildImage.vue'),
+        ChildFileManager: () => import(/* webpackChunkName: "ChildFileManager" */ '@/components/ChildFileManager.vue'),
+        ChildText: () => import(/* webpackChunkName: "ChildText" */ '@/components/ChildText.vue'),
+        ChildTextarea: () => import(/* webpackChunkName: "ChildTextarea" */ '@/components/ChildTextarea.vue'),
+        ChildWysiwyg: () => import(/* webpackChunkName: "ChildWysiwyg" */ '@/components/ChildWysiwyg/index.vue'),
+        ChildMultipleCheckbox: () =>
+            import(/* webpackChunkName: "ChildMultipleCheckbox" */ '@/components/ChildMultipleCheckbox.vue'),
+        ChildLink: () => import(/* webpackChunkName: "ChildLink" */ '@/components/ChildLink.vue'),
+        ChildSelectbox: () => import(/* webpackChunkName: "ChildSelectbox" */ '@/components/ChildSelectbox.vue'),
     },
     data() {
         return {
@@ -62,11 +67,21 @@ export default {
                 children,
             };
         },
+        getIsActivated() {
+            return childConfig => this.selectedIDs.includes(childConfig.no);
+        },
         getChildComponentProps() {
             return childConfig => {
                 const extType = getExtTypeByValue(`${childConfig.ext_type}`);
+                if (extType === undefined) {
+                    // eslint-disable-next-line no-console
+                    console.warn(`could not resolve specified extension type: ${childConfig.ext_type}`);
+                    return {
+                        is: 'template', // just for go through component rendering error without `is` prop.
+                    };
+                }
                 return {
-                    is: `Child${extType}`, // TODO create other child components other than text,textarea,file.
+                    is: `Child${extType}`,
                     ...childConfig,
                 };
             };

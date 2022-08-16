@@ -66,6 +66,8 @@ export default {
             this.removes = !this.removes;
         },
         async requestUploadFile(file) {
+            // TODO topics_group_idを取得できない
+            // TODO new URLParams
             const topicsGroupID = new URL(window.location.href).searchParams.get('topics_id');
             const url = `/direct/topics/file_upload/?type=file%26width=%26height=%26topics_group_id=${topicsGroupID}%26ext_no=${this.$attrs.no}`;
 
