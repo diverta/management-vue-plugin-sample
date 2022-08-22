@@ -45,7 +45,8 @@ export default {
     },
     methods: {
         handleOnChange(e) {
-            this.$emit('change', e.target.value);
+            const value = e.target.value.replace(/-\d+/gi, '');
+            this.$emit('change', value);
         },
     },
     mounted() {
