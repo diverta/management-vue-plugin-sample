@@ -68,7 +68,7 @@ export default {
             };
         },
         getIsActivated() {
-            return childConfig => this.selectedIDs.includes(childConfig.no);
+            return childConfig => this.selectedIDs.map(no => `${no}`.padStart(2, '0')).includes(childConfig.no);
         },
         getChildComponentProps() {
             return childConfig => {
