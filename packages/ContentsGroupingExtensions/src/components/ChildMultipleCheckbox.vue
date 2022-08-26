@@ -8,7 +8,7 @@
             :data-default_value="$attrs.default_value"
         >
             <label
-                v-for="[key, value] in Object.entries($attrs.options)"
+                v-for="[key, value] in Object.entries($attrs.options || {})"
                 style="margin-right: 10px; white-space: nowrap;"
                 :key="`${$attrs.name}_${key}_${value}`"
             >
@@ -29,7 +29,7 @@
 export default {
     methods: {
         getIsChecked(key) {
-            return Object.entries(this.$attrs.value).find(([_key]) => `${_key}` === `${key}`);
+            return Object.entries(this.$attrs.value || {}).find(([_key]) => `${_key}` === `${key}`);
         },
     },
 };

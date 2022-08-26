@@ -96,6 +96,16 @@ npm run serve
 # Edit as needed
 ```
 
+## Storybook
+
+To confirm pattern in a component that could have mutable state,
+add Storybook story in `src/stories` when you add a new component.
+
+```sh
+# Open Storybook dashboard
+npm run storybook
+```
+
 ## Testing
 
 _Make sure all tests are passing before building and committing._

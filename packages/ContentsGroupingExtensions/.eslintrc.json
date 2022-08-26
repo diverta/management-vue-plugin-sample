@@ -11,7 +11,13 @@
         "ecmaVersion": 8
     },
     "plugins": ["jest"],
-    "extends": ["plugin:vue/essential", "eslint:recommended", "plugin:jest/recommended", "plugin:prettier/recommended"],
+    "extends": [
+        "plugin:vue/essential",
+        "eslint:recommended",
+        "plugin:jest/recommended",
+        "plugin:prettier/recommended",
+        "plugin:storybook/recommended"
+    ],
     "rules": {
         "no-console": "warn",
         "no-var": "error",

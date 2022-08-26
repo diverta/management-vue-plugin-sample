@@ -7,10 +7,10 @@
             :data-ext_type="$attrs.ext_type"
             :data-default_value="$attrs.default_value"
         >
-            <select :name="$attrs.name" v-model="selected">
-                <option v-if="!required" value="" selected>選択なし</option>
+            <select :name="$attrs.name" v-model="selected" ref="select">
+                <option v-if="!required" value="">選択なし</option>
                 <option
-                    v-for="[value, key] in Object.entries($attrs.options)"
+                    v-for="[value, key] in Object.entries($attrs.options || {})"
                     :key="key"
                     :label="key"
                     :data-key="key"
@@ -27,7 +27,7 @@
 export default {
     data() {
         return {
-            selected: '',
+            selected: null,
         };
     },
     computed: {
@@ -36,7 +36,14 @@ export default {
         },
     },
     mounted() {
-        this.selected = this.$attrs.default_value || this.$attrs.value || '';
+        const defaultValue = this.$attrs.default_value || this.$attrs.value;
+        if (defaultValue !== undefined) {
+            this.selected = defaultValue;
+            return;
+        }
+        this.$nextTick(() => {
+            this.$refs.select.getElementsByTagName('option')[0].selected = 'selected';
+        });
     },
 };
 </script>
