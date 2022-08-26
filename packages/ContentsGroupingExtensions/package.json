@@ -14,7 +14,9 @@
     "serve:https": "cross-env WEBPACK_DEV_SERVER=true RCMS_JS_HTTPS=true webpack-dev-server",
     "dev": "webpack",
     "watch": "webpack --watch",
-    "build": "cross-env WEBPACK_MODE=production webpack"
+    "build": "cross-env WEBPACK_MODE=production webpack",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
   },
   "dependencies": {
     "vue": "^2.6.6"
@@ -57,7 +59,16 @@
     "@ckeditor/ckeditor5-theme-lark": "^31.0.0",
     "@ckeditor/ckeditor5-ui": "^31.0.0",
     "@ckeditor/ckeditor5-upload": "^31.0.0",
+    "@storybook/addon-actions": "^6.5.10",
+    "@storybook/addon-essentials": "^6.5.10",
+    "@storybook/addon-interactions": "^6.5.10",
+    "@storybook/addon-links": "^6.5.10",
+    "@storybook/builder-webpack5": "^6.5.10",
+    "@storybook/manager-webpack5": "^6.5.10",
+    "@storybook/testing-library": "^0.0.13",
+    "@storybook/vue": "^6.5.10",
     "@vue/test-utils": "^1.0.0-beta.29",
+    "@whitespace/storybook-addon-html": "^5.0.0",
     "axios": "^0.27.2",
     "babel-7-jest": "^21.3.3",
     "babel-core": "7.0.0-bridge.0",
@@ -74,6 +85,7 @@
     "eslint-loader": "^2.1.2",
     "eslint-plugin-jest": "^22.6.4",
     "eslint-plugin-prettier": "^3.1.0",
+    "eslint-plugin-storybook": "^0.6.4",
     "eslint-plugin-vue": "^5.2.2",
     "file-loader": "^3.0.1",
     "jest": "^24.8.0",
