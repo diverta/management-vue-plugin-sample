@@ -1,7 +1,13 @@
 <template>
     <td>
         <div class="ext_item_0" data-ext_type="0" data-default_value="">
-            <input type="text" name="ext_col_01" :value="colorCode" size="60" />
+            <input
+                type="text"
+                :name="extConfig[0].ext_col_nm"
+                :value="colorCode"
+                size="60"
+                :style="{ color: colorCode }"
+            />
             <chrome-picker :value="colorCode" @input="updateValue"></chrome-picker>
         </div>
     </td>
@@ -15,9 +21,13 @@ export default {
     components: {
         'chrome-picker': Chrome,
     },
-    props: ['extConfig', 'test'],
+    props: {
+        topics_group_id: { type: Number },
+        extConfig: { type: Array },
+        defaultColor: { type: String, default: '' },
+    },
     mounted: function() {
-        this.colorCode = this.extConfig[0].value;
+        this.colorCode = this.extConfig[0].value || this.defaultColor;
     },
     data() {
         return {
