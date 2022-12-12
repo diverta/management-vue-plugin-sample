@@ -49,8 +49,8 @@
                 <label for="category" class="col-md-2 d-flex justify-content-end">Category </label>
                 <div class="col-md-10">
                     <select class="form-control" id="category" v-model="topics.contents_type">
-                        <option v-for="(category, key) in categoryOptions" :value="key" :key="key">
-                            {{ category.category_nm }}
+                        <option v-for="category in categoryOptions" :value="category.key" :key="category.key">
+                            {{ category.value.category_nm }}
                         </option>
                     </select>
                 </div>
@@ -60,8 +60,8 @@
                     <label for="category" class="col-md-2 d-flex justify-content-end">Second category </label>
                     <div class="col-md-10">
                         <select class="form-control" id="category" v-model="topics.contents_type_2">
-                            <option v-for="(category, key) in categoryOptions" :value="key" :key="key">
-                                {{ category.category_nm }}
+                            <option v-for="category in categoryOptions" :value="category.key" :key="category.key">
+                                {{ category.value.category_nm }}
                             </option>
                         </select>
                     </div>
@@ -72,8 +72,8 @@
                     <label for="category" class="col-md-2 d-flex justify-content-end">Third category </label>
                     <div class="col-md-10">
                         <select class="form-control" id="category" v-model="topics.contents_type_3">
-                            <option v-for="(category, key) in categoryOptions" :value="key" :key="key">
-                                {{ category.category_nm }}
+                            <option v-for="category in categoryOptions" :value="category.key" :key="category.key">
+                                {{ category.value.category_nm }}
                             </option>
                         </select>
                     </div>
@@ -81,13 +81,13 @@
             </div>
             <hr />
             <div v-for="(group, indexGroup) in ext_items" :key="'group_' + indexGroup" class="row mb-3">
-                <div v-for="(row, indexRow) in group" :key="'group_row' + indexRow">
-                    <div v-if="row.items.length > 1" class="row">
+                <div v-for="(row, indexRow) in group.items" :key="'group_row' + indexRow">
+                    <div v-if="row.length > 1" class="row">
                         <div class="col-md-2"></div>
                         <div class="col-md-10 card bg-light">
                             <div class="card-body">
-                                <span class="text-success">&nbsp;{{ indexRow + 1 }}/{{ group.length }}</span>
-                                <div v-for="(item, indexItem) in row.items" :key="'item_' + indexItem" class="mb-2">
+                                <span class="text-success">&nbsp;{{ indexRow + 1 }}/{{ row.length }}</span>
+                                <div v-for="(item, indexItem) in row" :key="'item_' + indexItem" class="mb-2">
                                     <div class="row mb-1">
                                         <label :for="item.ext_col_nm + '_' + indexItem" class="col">{{
                                             item.ext_title
@@ -117,10 +117,10 @@
                         </div>
                     </div>
                     <div v-else>
-                        <div v-for="(item, indexItem) in row.items" :key="'item_' + indexItem" class="row mb-3">
+                        <div v-for="(item, indexItem) in row" :key="'item_' + indexItem" class="row mb-3">
                             <label :for="item.ext_col_nm + '_' + indexItem" class="col-md-2 d-flex justify-content-end"
                                 >{{ item.ext_title
-                                }}<span class="text-success">&nbsp;{{ indexRow + 1 }}/{{ group.length }}</span>
+                                }}<span class="text-success">&nbsp;{{ indexRow + 1 }}/{{ row.length }}</span>
                             </label>
                             <div class="col-md-10">
                                 <input
@@ -140,8 +140,8 @@
                 <label for="topics_flg" class="col-md-2 d-flex justify-content-end">Display in the list </label>
                 <div class="col-md-10">
                     <select class="form-control" id="topics_flg" v-model="topics.topics_flg">
-                        <option v-for="(flag, key) in topicsFlagOptions" :value="key" :key="key">
-                            {{ flag }}
+                        <option v-for="flag in topicsFlagOptions" :value="flag.key" :key="flag.key">
+                            {{ flag.value }}
                         </option>
                     </select>
                 </div>
@@ -150,8 +150,8 @@
                 <label for="regular_flg" class="col-md-2 d-flex justify-content-end">Higher-ranked display </label>
                 <div class="col-md-10">
                     <select class="form-control" id="regular_flg" v-model="topics.regular_flg">
-                        <option v-for="(flag, key) in regularFlagOptions" :value="key" :key="key">
-                            {{ flag }}
+                        <option v-for="flag in regularFlagOptions" :value="flag.key" :key="flag.key">
+                            {{ flag.value }}
                         </option>
                     </select>
                 </div>
@@ -160,8 +160,8 @@
                 <label for="restriction" class="col-md-2 d-flex justify-content-end">Access restriction </label>
                 <div class="col-md-10">
                     <select multiple="true" class="form-control" id="restriction" v-model="topics.secure_level">
-                        <option v-for="(group, key) in memberGroupOptions" :value="key" :key="key">
-                            {{ group }}
+                        <option v-for="group in memberGroupOptions" :value="group.key" :key="group.key">
+                            {{ group.value }}
                         </option>
                     </select>
                 </div>
@@ -243,13 +243,16 @@ export default {
         formData: { type: Object, default: () => {} },
         ext_items: { type: Array, default: () => [] },
         categoryCount: { type: Number, default: 0 },
-        categoryOptions: { type: Object },
-        topicsFlagOptions: { type: Object },
+        categoryOptions: { type: Array },
+        topicsFlagOptions: { type: Array },
         regularFlagOptions: { type: Array, default: () => [] },
-        memberGroupOptions: { type: Object },
-        notifOptions: { type: Object, default: () => {} },
+        memberGroupOptions: { type: Array },
+        notifOptions: { type: Array, default: () => [] },
         githubWorkflowOptions: { type: Object, default: () => {} },
         relatedTags: { type: Array, default: () => [] },
+        errors: { type: Array, default: () => [] },
+        messages: { type: Array, default: () => [] },
+        infos: { type: Array, default: () => [] },
     },
     data() {
         return {
@@ -260,15 +263,15 @@ export default {
             tagOptions: [],
             selectedTags: [],
             isLoading: false,
-            errors: [],
-            messages: [],
+            // errors: [],
+            // messages: [],
         };
     },
     created() {
         for (const indexGroup in Object.entries(this.ext_items)) {
-            for (const indexRow in Object.entries(this.ext_items[indexGroup])) {
-                for (const indexItem in Object.entries(this.ext_items[indexGroup][indexRow].items)) {
-                    const item = this.ext_items[indexGroup][indexRow].items[indexItem];
+            for (const indexRow in Object.entries(this.ext_items[indexGroup].items)) {
+                for (const indexItem in Object.entries(this.ext_items[indexGroup].items[indexRow])) {
+                    const item = this.ext_items[indexGroup].items[indexRow][indexItem];
                     this.topics.ext[item.ext_index + '_' + indexRow] = '';
                 }
             }
