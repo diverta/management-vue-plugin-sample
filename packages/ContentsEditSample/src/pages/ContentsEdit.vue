@@ -211,6 +211,21 @@
             </div>
             <hr />
             <div class="row mb-3">
+                <label for="restriction" class="col-md-2 d-flex justify-content-end">Workflow </label>
+                <div class="col-md-10">
+                    <select
+                        class="form-control"
+                        id="dispatch_github_workflow"
+                        v-model="topics.dispatch_github_workflow"
+                    >
+                        <option v-for="option in githubWorkflowOptions" :value="option.key" :key="option.key">
+                            {{ option.value }}
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <hr />
+            <div class="row mb-3">
                 <div class="col d-flex justify-content-end">
                     <button
                         type="submit"
@@ -248,10 +263,10 @@ export default {
         regularFlagOptions: { type: Array, default: () => [] },
         memberGroupOptions: { type: Array },
         notifOptions: { type: Array, default: () => [] },
-        githubWorkflowOptions: { type: Object, default: () => {} },
+        githubWorkflowOptions: { type: Array, default: () => [] },
         relatedTags: { type: Array, default: () => [] },
-        errors: { type: Array, default: () => [] },
-        messages: { type: Array, default: () => [] },
+        // errors: { type: Array, default: () => [] },
+        // messages: { type: Array, default: () => [] },
         infos: { type: Array, default: () => [] },
     },
     data() {
@@ -263,8 +278,8 @@ export default {
             tagOptions: [],
             selectedTags: [],
             isLoading: false,
-            // errors: [],
-            // messages: [],
+            errors: [],
+            messages: [],
         };
     },
     created() {
@@ -282,6 +297,7 @@ export default {
             this.formData.ext = this.topics.ext;
         }
         this.topics = { ...this.topics, ...this.formData };
+        this.initExt();
         this.topics.topics_group_id = this.topics_group_id;
         if (typeof this.topics.secure_level === 'string') {
             this.topics.secure_level = JSON.parse(this.topics.secure_level);
@@ -327,6 +343,26 @@ export default {
                 tag_nm: tag.tag_nm,
             };
         },
+        initExt() {
+            for (const group of this.ext_items) {
+                const group_loop = group.parent_item.ext_group_loop;
+                for (const group_row of group.items) {
+                    for (const item of group_row) {
+                        const ext_no = item.ext_index;
+                        if (this.topics.ext[ext_no]) {
+                            if (group_loop > 1) {
+                                for (let i = 0; i < group_loop; i++) {
+                                    this.topics.ext[ext_no + '_' + i] = this.topics.ext[ext_no][i];
+                                }
+                            } else {
+                                this.topics.ext[ext_no + '_0'] = this.topics.ext[ext_no];
+                            }
+                            delete this.topics.ext[ext_no];
+                        }
+                    }
+                }
+            }
+        },
         async save() {
             this.isLoading = true;
             this.errors = [];
@@ -360,7 +396,9 @@ export default {
             if (this.topics_id) {
                 formData.append('topics_id', this.topics_id);
             }
-            formData.append('contents_type', topics.contents_type);
+            if (topics.contents_type) {
+                formData.append('contents_type', topics.contents_type);
+            }
             if (this.categoryCount > 1) {
                 formData.append('contents_type_2', topics.contents_type_2);
             }
@@ -368,9 +406,18 @@ export default {
                 formData.append('contents_type_3', topics.contents_type_3);
             }
             formData.append('subject', topics.subject);
-            formData.append('slug', topics.slug);
-            formData.append('topics_flg', topics.topics_flg);
-            formData.append('regular_flg', topics.regular_flg);
+            if (topics.slug) {
+                formData.append('slug', topics.slug);
+            }
+            if (topics.topics_flg) {
+                formData.append('topics_flg', topics.topics_flg);
+            }
+            if (topics.regular_flg) {
+                formData.append('regular_flg', topics.regular_flg);
+            }
+            if (topics.open_type) {
+                formData.append('open_type', topics.open_type);
+            }
             const groups = topics.secure_level;
             for (let i = 0; i < groups.length; i++) {
                 formData.append('secure_level[' + i + ']', groups[i]);
@@ -383,17 +430,43 @@ export default {
                 );
                 cntTag++;
             }
-            formData.append('contents', topics.contents);
+            if (topics.dispatch_github_workflow) {
+                formData.append('dispatch_github_workflow', topics.dispatch_github_workflow);
+            }
+            if (topics.contents) {
+                formData.append('contents', topics.contents);
+            }
 
             // This is statically processed to simplify things
             // If you want it to be dynamic based on content-structure setting,
             // please use the setting information from ext_items props
-            formData.append('ext_1[0]', topics.ext['1_0']);
-            formData.append('ext_1[1]', topics.ext['1_1']);
-            formData.append('ext_1[2]', topics.ext['1_2']);
-            formData.append('ext_2[0]', topics.ext['2_0']);
-            formData.append('ext_2[1]', topics.ext['2_1']);
-            formData.append('ext_2[2]', topics.ext['2_2']);
+            // formData.append('ext_1[0]', topics.ext['1_0']);
+            // formData.append('ext_1[1]', topics.ext['1_1']);
+            // formData.append('ext_1[2]', topics.ext['1_2']);
+            // formData.append('ext_2[0]', topics.ext['2_0']);
+            // formData.append('ext_2[1]', topics.ext['2_1']);
+            // formData.append('ext_2[2]', topics.ext['2_2']);
+
+            for (const group of this.ext_items) {
+                const group_loop = group.parent_item.ext_group_loop;
+                for (const group_row of group.items) {
+                    for (const item of group_row) {
+                        const ext_no = item.ext_index;
+                        if (group_loop > 1) {
+                            for (let i = 0; i < group_loop; i++) {
+                                if (topics.ext[ext_no + '_' + i] && !formData.has('ext_' + ext_no + '[' + i + ']')) {
+                                    formData.append('ext_' + ext_no + '[' + i + ']', topics.ext[ext_no + '_' + i]);
+                                }
+                            }
+                        } else {
+                            if (topics.ext[ext_no + '_0'] && !formData.has('ext_' + ext_no)) {
+                                formData.append('ext_' + ext_no, topics.ext[ext_no + '_0']);
+                            }
+                        }
+                    }
+                }
+            }
+
             return formData;
         },
     },
