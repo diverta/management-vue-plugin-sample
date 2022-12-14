@@ -86,7 +86,7 @@
                         <div class="col-md-2"></div>
                         <div class="col-md-10 card bg-light">
                             <div class="card-body">
-                                <span class="text-success">&nbsp;{{ indexRow + 1 }}/{{ row.length }}</span>
+                                <span class="text-success">&nbsp;{{ indexRow + 1 }}/{{ group.items.length }}</span>
                                 <div v-for="(item, indexItem) in row" :key="'item_' + indexItem" class="mb-2">
                                     <div class="row mb-1">
                                         <label :for="item.ext_col_nm + '_' + indexItem" class="col">{{
@@ -120,7 +120,7 @@
                         <div v-for="(item, indexItem) in row" :key="'item_' + indexItem" class="row mb-3">
                             <label :for="item.ext_col_nm + '_' + indexItem" class="col-md-2 d-flex justify-content-end"
                                 >{{ item.ext_title
-                                }}<span class="text-success">&nbsp;{{ indexRow + 1 }}/{{ row.length }}</span>
+                                }}<span class="text-success">&nbsp;{{ indexRow + 1 }}/{{ group.items.length }}</span>
                             </label>
                             <div class="col-md-10">
                                 <input
