@@ -7,13 +7,7 @@
             :data-ext_type="$attrs.ext_type"
             :data-default_value="$attrs.default_value"
         >
-            <select
-                :name="$attrs.name"
-                @change="handleOnChange"
-                ref="select"
-                @input="() => (selected = true)"
-                v-model="selected"
-            >
+            <select :name="$attrs.name" @change="handleOnChange" ref="select" v-model="selected">
                 <option v-if="!required" value="" selected>選択なし</option>
                 <option
                     v-for="[value, key] in Object.entries($attrs.options)"
