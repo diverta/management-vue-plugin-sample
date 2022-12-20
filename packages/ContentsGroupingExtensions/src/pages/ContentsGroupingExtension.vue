@@ -108,7 +108,7 @@ export default {
             return this.extConfig.filter(({ ext_type }) => `${ext_type}` === `${extType}`);
         },
         handleOnChangeParentDropdown(value) {
-            this.selectedIDs = value.split(',');
+            this.selectedIDs = value.split(',').map(id => id.replace(/-\d+/, ''));
         },
         sortByExtOrderNumber(extA, extB) {
             return extB.ext_order_no - extA.ext_order_no;
