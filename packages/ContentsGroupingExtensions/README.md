@@ -50,6 +50,7 @@ Check the available extensions below.
 | Wysiwyg          |      |
 | Link             |      |
 | FileManager      |      |
+| Map              |      |
 
 ---
 
