@@ -10,6 +10,7 @@ export const EXT_TYPE = {
     Wysiwyg: 6,
     Link: 7,
     FileManager: 30,
+    Map: 11,
     // TextAutocomplete: 13,
     // RelationField: 20,
     // Html: 21,

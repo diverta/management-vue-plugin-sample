@@ -47,6 +47,7 @@ ContentsGroupingExtension のフロントエンドコードです。
 | Wysiwyg          |      |
 | Link             |      |
 | FileManager      |      |
+| Map              |      |
 
 ---
 
