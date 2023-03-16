@@ -12,7 +12,7 @@ export const EXT_TYPE = {
     FileManager: 30,
     Map: 11,
     // TextAutocomplete: 13,
-    // RelationField: 20,
+    RelationField: 20,
     // Html: 21,
     // ApiField: 32,
     // Counter: 34,
