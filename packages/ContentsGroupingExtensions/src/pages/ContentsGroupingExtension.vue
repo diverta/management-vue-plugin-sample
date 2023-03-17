@@ -5,7 +5,7 @@
                 v-bind="{
                     ...config.parent,
                 }"
-                @change="handleOnChangeParentDropdown"
+                @change="ids => (selectedIDs = ids)"
             >
                 <div v-for="childConfig in config.children" :key="childConfig.no">
                     <!-- eslint-disable-next-line vue/require-component-is -->
@@ -112,9 +112,6 @@ export default {
         },
         getConfigsBy(extType) {
             return this.extConfig.filter(({ ext_type }) => `${ext_type}` === `${extType}`);
-        },
-        handleOnChangeParentDropdown(value) {
-            this.selectedIDs = value.split(',').map(id => id.replace(/-\d+/, ''));
         },
         sortByExtOrderNumber(extA, extB) {
             return extB.ext_order_no - extA.ext_order_no;
