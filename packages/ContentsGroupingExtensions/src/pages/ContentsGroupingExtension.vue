@@ -68,7 +68,15 @@ export default {
     computed: {
         config() {
             const parent = this.extConfig.find(d => d.ext_group_parent_ext_col === '');
-            const children = this.extConfig.filter(d => d.ext_group_parent_ext_col !== '');
+            const children = this.extConfig
+                .filter(d => d.ext_group_parent_ext_col !== '')
+                // sort by selectedIDs order, in order to display childrens as user specified.
+                // e.g.) if user specified 90,1,25, then 90,1,25 order should be displayed (not 1,25,90).
+                .sort((a, b) => {
+                    const ids = this.selectedIDs.map(no => `${no}`.padStart(2, '0'));
+                    return ids.indexOf(a.no) - ids.indexOf(b.no);
+                });
+
             return {
                 parent,
                 children,
