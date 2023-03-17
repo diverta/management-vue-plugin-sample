@@ -40,17 +40,19 @@ If you want it other than ones done, please raise an issue or give us a PR.
 
 Check the available extensions below.
 
-| extension name   | note |
-| ---------------- | ---- |
-| Text             |      |
-| Textarea         |      |
-| Selectbox        |      |
-| Image            |      |
-| MultipleCheckbox |      |
-| Wysiwyg          |      |
-| Link             |      |
-| FileManager      |      |
-| Map              |      |
+| extension name   | note                                                           |
+| ---------------- | -------------------------------------------------------------- |
+| Text             |                                                                |
+| Textarea         |                                                                |
+| Selectbox        |                                                                |
+| Image            |                                                                |
+| MultipleCheckbox |                                                                |
+| Wysiwyg          |                                                                |
+| Link             |                                                                |
+| FileManager      |                                                                |
+| Map              |                                                                |
+| RelateionFld     |                                                                |
+| HTML             | :construction: does not work autocompete with our internal fns |
 
 ---
 

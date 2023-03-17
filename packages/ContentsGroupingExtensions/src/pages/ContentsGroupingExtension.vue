@@ -1,5 +1,5 @@
 <template>
-    <td v-if="extConfig" :class="distinguishClassName">
+    <td v-if="extConfig" class="js-expand" :class="distinguishClassName">
         <dl>
             <ParentDropdown
                 v-bind="{
@@ -14,6 +14,7 @@
                         v-bind="{
                             ...getChildComponentProps(childConfig),
                             activated: getIsActivated(childConfig),
+                            topics_group_id,
                         }"
                     />
                 </div>
@@ -37,6 +38,7 @@ export default {
     props: {
         request: { type: Object, required: false },
         extConfig: { type: Array, required: true },
+        topics_group_id: { type: Number, required: true },
     },
     components: {
         ParentDropdown,
@@ -50,6 +52,9 @@ export default {
         ChildLink: () => import(/* webpackChunkName: "ChildLink" */ '@/components/ChildLink.vue'),
         ChildSelectbox: () => import(/* webpackChunkName: "ChildSelectbox" */ '@/components/ChildSelectbox.vue'),
         ChildMap: () => import(/* webpackChunkName: "ChildMap" */ '@/components/ChildMap.vue'),
+        ChildRelationField: () =>
+            import(/* webpackChunkName: "ChildRelationField" */ '@/components/ChildRelationField/index.vue'),
+        ChildHtml: () => import(/* webpackChunkName: "ChildHtml" */ '@/components/ChildHtml/index.vue'),
     },
     data() {
         return {
@@ -128,3 +133,9 @@ export default {
     },
 };
 </script>
+
+<style scoped>
+.js-expand {
+    width: 1%;
+}
+</style>

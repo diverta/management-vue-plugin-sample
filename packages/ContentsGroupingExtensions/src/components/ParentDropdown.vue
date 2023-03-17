@@ -9,13 +9,7 @@
         >
             <select :name="$attrs.name" @change="handleOnChange" ref="select" v-model="selected">
                 <option v-if="!required" value="" selected>選択なし</option>
-                <option
-                    v-for="[value, key] in Object.entries($attrs.options)"
-                    :key="key"
-                    :label="key"
-                    :data-key="key"
-                    :value="value"
-                >
+                <option v-for="[value, key] in sortedOptions" :key="key" :label="key" :data-key="key" :value="value">
                     {{ key }}
                 </option>
             </select>
@@ -27,12 +21,30 @@
 
 <script>
 export default {
+    props: {
+        ext_option: { type: String, required: true },
+        options: { type: Object, required: true },
+    },
     data() {
         return {
             selected: '',
         };
     },
     computed: {
+        sortedOptions() {
+            const numbers = this.ext_option
+                .split('\n')
+                .filter(v => v)
+                .map(opt => opt.split('::')[0])
+                .filter(v => v)
+                .map(nmsStr => nmsStr.match(/\d+/g) || [])
+                .flat()
+                .filter(v => v)
+                .map(nmStr => parseInt(nmStr));
+            return Object.entries(this.options).sort((a, b) =>
+                numbers.indexOf(parseInt(a[0])) > numbers.indexOf(parseInt(b[0])) ? 1 : -1
+            );
+        },
         required() {
             return this.$attrs.limits && this.$attrs.limits.required !== undefined;
         },
