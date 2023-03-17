@@ -54,6 +54,7 @@ export default {
         ChildMap: () => import(/* webpackChunkName: "ChildMap" */ '@/components/ChildMap.vue'),
         ChildRelationField: () =>
             import(/* webpackChunkName: "ChildRelationField" */ '@/components/ChildRelationField/index.vue'),
+        ChildHtml: () => import(/* webpackChunkName: "ChildHtml" */ '@/components/ChildHtml/index.vue'),
     },
     data() {
         return {

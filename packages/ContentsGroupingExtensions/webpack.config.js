@@ -7,6 +7,7 @@ const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const { VueLoaderPlugin } = require('vue-loader');
+const MonacoEditorPlugin = require('monaco-editor-webpack-plugin');
 
 // eslint-disable-next-line no-unused-vars
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
@@ -119,6 +120,9 @@ module.exports = {
         new CKEditorWebpackPlugin({
             language: 'ja',
             addMainLanguageTranslationsToAllAssets: true,
+        }),
+        new MonacoEditorPlugin({
+            languages: ['css', 'html', 'javascript', 'typescript'],
         }),
         // new BundleAnalyzerPlugin(),
     ],
