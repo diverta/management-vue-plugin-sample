@@ -55,6 +55,7 @@ export default {
         ChildRelationField: () =>
             import(/* webpackChunkName: "ChildRelationField" */ '@/components/ChildRelationField/index.vue'),
         ChildHtml: () => import(/* webpackChunkName: "ChildHtml" */ '@/components/ChildHtml/index.vue'),
+        ChildDate: () => import(/* webpackChunkName: "ChildDate" */ '@/components/ChildDate.vue'),
     },
     data() {
         return {
