@@ -53,7 +53,7 @@ export default {
             this.$emit('change', this.toArrayIDs(e.target.value));
         },
         toArrayIDs(idsStr) {
-            return idsStr.replace(/-\d+/gi, '').split(',');
+            return idsStr.replace(/^\d+-/gi, '').split(',');
         },
     },
     mounted() {
