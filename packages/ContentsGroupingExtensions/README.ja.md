@@ -37,17 +37,19 @@ ContentsGroupingExtension のフロントエンドコードです。
 現状では, 既存のいくつかの種類の拡張項目は未作成で、順次対応中です。  
 下記対応済みの拡張項目以外のものについては, Issue をされるかプルリクエストをお願いします.
 
-| extension name   | note |
-| ---------------- | ---- |
-| Text             |      |
-| Textarea         |      |
-| Selectbox        |      |
-| Image            |      |
-| MultipleCheckbox |      |
-| Wysiwyg          |      |
-| Link             |      |
-| FileManager      |      |
-| Map              |      |
+| extension name   | note                                                                |
+| ---------------- | ------------------------------------------------------------------- |
+| Text             |                                                                     |
+| Textarea         |                                                                     |
+| Selectbox        |                                                                     |
+| Image            |                                                                     |
+| MultipleCheckbox |                                                                     |
+| Wysiwyg          |                                                                     |
+| Link             |                                                                     |
+| FileManager      |                                                                     |
+| Map              |                                                                     |
+| RelateionFld     |                                                                     |
+| HTML             | :construction: 内部関数などに関するオートコンプリートは効きません。 |
 
 ---
 
