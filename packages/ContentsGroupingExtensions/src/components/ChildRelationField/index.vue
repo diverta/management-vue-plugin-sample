@@ -26,7 +26,7 @@
 export default {
     inheritAttrs: false,
     components: {
-        ExtRelationFld: () => import('./ExtRelationFld.vue'),
+        ExtRelationFld: () => import('./ExtRelationFld/index.vue'),
     },
 };
 </script>

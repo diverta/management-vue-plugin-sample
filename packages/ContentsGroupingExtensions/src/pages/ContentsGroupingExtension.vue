@@ -1,5 +1,5 @@
 <template>
-    <td v-if="extConfig" :class="distinguishClassName">
+    <td v-if="extConfig" class="js-expand" :class="distinguishClassName">
         <dl>
             <ParentDropdown
                 v-bind="{
@@ -132,3 +132,9 @@ export default {
     },
 };
 </script>
+
+<style scoped>
+.js-expand {
+    width: 1%;
+}
+</style>
