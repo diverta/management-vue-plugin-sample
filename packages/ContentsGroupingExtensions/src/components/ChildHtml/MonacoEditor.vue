@@ -107,7 +107,9 @@ export default {
                 ...this.options,
             });
 
-            editor.onDidChangeModelContent = () => this.$emit('input', editor.getValue());
+            editor.onDidChangeModelContent(() => {
+                this.$emit('input', editor.getValue());
+            });
 
             this.monaco = monaco;
             this.editor = editor;
