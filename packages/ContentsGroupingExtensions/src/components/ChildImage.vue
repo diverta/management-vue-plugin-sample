@@ -12,7 +12,7 @@
                     <a :href="fileURL" target="_blank">
                         <img :src="fileURL" style="max-width:200px;" alt="" />
                     </a>
-                    <input type="hidden" :name="`tmpfile_${$attrs.name}`" :value="fileURL" />
+                    <input v-if="$attrs.activated" type="hidden" :name="`tmpfile_${$attrs.name}`" :value="fileURL" />
                 </div>
                 <br />
 
@@ -26,6 +26,7 @@
                     {{ fileURL ? '画像を差し替える' : '画像を選択する' }}
 
                     <input
+                        v-if="$attrs.activated"
                         type="file"
                         name="Filedata"
                         style="font-size: 30px; opacity: 0; position: absolute; right: -3px; top: -3px; z-index: 999;"
