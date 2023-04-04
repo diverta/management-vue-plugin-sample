@@ -39,8 +39,8 @@ export default {
         sortedOptions() {
             return this.ext_option
                 .split('\n')
-                .filter(v => v)
-                .map(opt => opt.split('::'))
+                .filter((v) => v)
+                .map((opt) => opt.split('::'))
                 .filter(([keyDef, label]) => keyDef && label)
                 .map(([keyDef, label]) => ({ keyDef, label }));
         },

@@ -30,9 +30,9 @@ export function createCkfinderConfig(option = {}) {
 export function filterItems(items = [], removePlugins = '') {
     const plugins = removePlugins
         .split(',')
-        .map(p => p.trim())
-        .filter(p => p !== '');
-    return items.filter(item => !plugins.includes(item));
+        .map((p) => p.trim())
+        .filter((p) => p !== '');
+    return items.filter((item) => !plugins.includes(item));
 }
 
 export function craeteFontColor(option = {}) {
@@ -40,7 +40,7 @@ export function craeteFontColor(option = {}) {
         return { columns: 10, colors: largeColorOptions };
     }
     if (typeof option.customColors === 'string') {
-        const customColors = option.customColors.split(',').map(val => ({ color: val, label: val }));
+        const customColors = option.customColors.split(',').map((val) => ({ color: val, label: val }));
         return { colors: customColors };
     }
 }
@@ -50,7 +50,7 @@ export function createFontBackgroundColor(option = {}) {
         return { columns: 10, colors: largeColorOptions };
     }
     if (typeof option.customColors === 'string') {
-        const customColors = option.customColors.split(',').map(val => ({ color: val, label: val }));
+        const customColors = option.customColors.split(',').map((val) => ({ color: val, label: val }));
         return { colors: customColors };
     }
 }
@@ -154,7 +154,7 @@ export default function buildConfig(option = {}) {
                     // Match all URLs or just the ones you need:
                     url: /.+/,
 
-                    html: match => {
+                    html: (match) => {
                         const url = match[0];
 
                         const iframeUrl =

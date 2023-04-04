@@ -17,7 +17,7 @@
                     <MonacoEditor
                         v-if="$attrs.activated"
                         v-bind="{ ...$attrs, code, opt: $attrs.options }"
-                        @input="v => (code = v)"
+                        @input="(v) => (code = v)"
                     />
                 </div>
             </template>

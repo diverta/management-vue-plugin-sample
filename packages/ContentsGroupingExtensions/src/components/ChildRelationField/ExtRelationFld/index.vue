@@ -12,7 +12,7 @@
             v-show="showsItemFinder"
             @cancel="() => (showsItemFinder = false)"
             v-bind="{ selection, ...$props, ...$attrs }"
-            @input="d => (selection = d)"
+            @input="(d) => (selection = d)"
         />
     </div>
 </template>

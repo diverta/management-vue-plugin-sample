@@ -43,7 +43,7 @@ export function getRelatedFldList({ table_id, allowed_id, keyword, setting_id, e
     return axios
         .get('/direct/topics/relation/', { params })
         .then(processError)
-        .catch(err =>
+        .catch((err) =>
             Promise.reject(
                 err || {
                     errors: ['要求中のエラー'],
@@ -63,7 +63,7 @@ export function getRelatedFldLabel({ table_id, selected_item, allowed_id }) {
     return axios
         .get('/direct/topics/relation_item/', { params })
         .then(processError)
-        .catch(err =>
+        .catch((err) =>
             Promise.reject(
                 err || {
                     errors: ['要求中のエラー'],

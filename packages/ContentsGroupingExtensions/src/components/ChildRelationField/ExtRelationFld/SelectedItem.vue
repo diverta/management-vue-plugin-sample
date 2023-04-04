@@ -10,7 +10,7 @@
             v-if="selection.link && selection.value"
             :href="selection.link"
             class="rcms_btn"
-            style="padding:0 4px; margin:0 4px 0 8px;"
+            style="padding: 0 4px; margin: 0 4px 0 8px"
             >編集</a
         >
         <a
@@ -18,7 +18,7 @@
             href=""
             @click.self.prevent="() => $emit('clear')"
             class="rcms_btn"
-            style="padding:0 4px; margin:0 4px;"
+            style="padding: 0 4px; margin: 0 4px"
             >クリア</a
         >
     </div>

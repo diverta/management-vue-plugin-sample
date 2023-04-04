@@ -13,7 +13,7 @@
                 <i class="fa" :class="[fileUrl ? 'fa-refresh' : 'fa-plus']" />
             </a>
         </div>
-        <div class="selected_file_contents" style="padding:10px;">
+        <div class="selected_file_contents" style="padding: 10px">
             <a :href="fileUrl" target="_blank">
                 {{ fileUrl || '' }}
             </a>
@@ -50,8 +50,8 @@ export default {
                     attributes: true,
                     attributeFilter: ['value'],
                 };
-                const observer = new MutationObserver(mutations => {
-                    mutations.forEach(mutation => {
+                const observer = new MutationObserver((mutations) => {
+                    mutations.forEach((mutation) => {
                         if (mutation.type === 'attributes') {
                             this.fileUrl = mutation.target.value;
                         }

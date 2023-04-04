@@ -18,7 +18,7 @@
 
             <template v-if="$attrs.options.add_time">
                 <label>時刻:</label>
-                <select style="width:55px" :name="`${$attrs.name}[h]`">
+                <select style="width: 55px" :name="`${$attrs.name}[h]`">
                     <option label="00" value="0">00</option>
                     <option label="01" value="1">01</option>
                     <option label="02" value="2">02</option>
@@ -45,8 +45,8 @@
                     <option label="23" value="23">23</option>
                 </select>
                 :
-                <select style="width:55px" :name="`${$attrs.name}[i]`"
-                    ><option label="00" value="0">00</option>
+                <select style="width: 55px" :name="`${$attrs.name}[i]`">
+                    <option label="00" value="0">00</option>
                     <option label="01" value="1">01</option>
                     <option label="02" value="2">02</option>
                     <option label="03" value="3">03</option>

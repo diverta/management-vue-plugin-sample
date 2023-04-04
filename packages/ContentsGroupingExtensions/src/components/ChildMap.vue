@@ -87,7 +87,7 @@ export default {
                 $iframe.contentWindow.infowindow.close();
             }
 
-            Object.values(input).forEach($e => {
+            Object.values(input).forEach(($e) => {
                 $e.value = '';
             });
         },

@@ -10,7 +10,7 @@
             <div v-show="!removes">
                 <div v-if="fileURL">
                     <a :href="fileURL" target="_blank">
-                        <img :src="fileURL" style="max-width:200px;" alt="" />
+                        <img :src="fileURL" style="max-width: 200px" alt="" />
                     </a>
                     <input v-if="$attrs.activated" type="hidden" :name="`tmpfile_${$attrs.name}`" :value="fileURL" />
                 </div>
@@ -20,7 +20,14 @@
 
                 <div
                     class="uploadifive-button"
-                    style="height: 30px; line-height: 30px; overflow: hidden; position: relative; text-align: center; width: auto;"
+                    style="
+                        height: 30px;
+                        line-height: 30px;
+                        overflow: hidden;
+                        position: relative;
+                        text-align: center;
+                        width: auto;
+                    "
                 >
                     <i :class="['fa', fileURL ? 'fa-refresh' : 'fa-plus']"></i>
                     {{ fileURL ? '画像を差し替える' : '画像を選択する' }}
@@ -29,13 +36,13 @@
                         v-if="$attrs.activated"
                         type="file"
                         name="Filedata"
-                        style="font-size: 30px; opacity: 0; position: absolute; right: -3px; top: -3px; z-index: 999;"
+                        style="font-size: 30px; opacity: 0; position: absolute; right: -3px; top: -3px; z-index: 999"
                         :accept="accepts.join(',')"
                         @input="upload"
                     />
                 </div>
                 <div v-if="msg">
-                    <span style="color:red;">{{ msg }}</span>
+                    <span style="color: red">{{ msg }}</span>
                 </div>
             </div>
             <div>

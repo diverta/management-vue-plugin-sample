@@ -132,7 +132,7 @@ export default {
             this.editor?.layout();
         },
         async waitUntil(target, ms = 100) {
-            return new Promise(resolve => {
+            return new Promise((resolve) => {
                 const interval = setInterval(() => {
                     if (target) {
                         clearInterval(interval);
@@ -159,9 +159,7 @@ export default {
         },
 
         customizeColors() {
-            $('.monaco-editor-wrap')
-                .find('style')
-                .remove();
+            $('.monaco-editor-wrap').find('style').remove();
             if (this.theme === 'rcms-vs') {
                 $(
                     '<style>.suggest-widget { color: #fff !important; } .suggest-widget.visible { color: #000 !important; }</style>'
