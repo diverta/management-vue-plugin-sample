@@ -4,14 +4,14 @@
             <v-select
                 v-if="
                     filter.options.length > 1 &&
-                        ['search1', 'search2', 'search_topics_group'].every(t => filter.name !== t)
+                    ['search1', 'search2', 'search_topics_group'].every((t) => filter.name !== t)
                 "
                 :key="index"
                 v-model="searchFiltersValues[filter.name]"
                 :options="filter.options"
                 :filterable="false"
                 :searchable="false"
-                :selectable="option => (option.disabled ? false : true)"
+                :selectable="(option) => (option.disabled ? false : true)"
             >
                 <template slot="option" slot-scope="option">
                     <span v-if="option.value != ''">{{ option.value }} :</span>
@@ -26,7 +26,7 @@
                 :options="filter.options"
                 :filterable="false"
                 :searchable="false"
-                :selectable="option => (option.disabled ? false : true)"
+                :selectable="(option) => (option.disabled ? false : true)"
             >
                 <template slot="option" slot-scope="option">
                     <span v-if="option.value != ''">{{ option.value }} :</span>
@@ -41,7 +41,7 @@
                 :options="filter.options"
                 :filterable="false"
                 :searchable="false"
-                :selectable="option => (option.disabled ? false : true)"
+                :selectable="(option) => (option.disabled ? false : true)"
                 @input="onChangeFilter"
             >
                 <template slot="option" slot-scope="option">
@@ -58,7 +58,7 @@
             v-on:search:focus="onSearchFocus"
             @input="onChange"
             :resetOnOptionsChange="true"
-            :selectable="option => !option.disabled"
+            :selectable="(option) => !option.disabled"
         >
             <template slot="no-options">
                 <div @mousedown.stop="">対象レコードが存在しません。</div>
@@ -101,7 +101,7 @@ export default {
     },
     computed: {
         contentsTypeList() {
-            return this.opts?.contents_type?.split(',')?.map(c => parseInt(c)) || [];
+            return this.opts?.contents_type?.split(',')?.map((c) => parseInt(c)) || [];
         },
     },
     methods: {
@@ -109,7 +109,7 @@ export default {
             loading(true);
             this.searchDebounced({ loading, keyword });
         },
-        searchDebounced: debounce(function(arg) {
+        searchDebounced: debounce(function (arg) {
             this.search(arg);
         }, 350),
 
@@ -156,7 +156,7 @@ export default {
                 throw new Error(errors);
             });
 
-            this.options = data.items.map(item => ({
+            this.options = data.items.map((item) => ({
                 label: item.title,
                 value: item.key,
                 openFlg: item.open_flg,
@@ -185,7 +185,7 @@ export default {
                         name: 'search_topics_group',
                         options: Object.keys(data.topicsGroupList)
                             .sort()
-                            .map(item => ({ label: data.topicsGroupList[item], value: item })),
+                            .map((item) => ({ label: data.topicsGroupList[item], value: item })),
                     };
                     searchFilters.push(d);
                     searchFiltersValues.search_topics_group = d.options[0];
@@ -193,12 +193,12 @@ export default {
             }
 
             data.searchList
-                .filter(d => d.length > 0)
+                .filter((d) => d.length > 0)
                 .forEach((d, idx) => {
                     const filterName = `search${parseInt(idx) + 1}`;
                     const searchOptions =
                         filterName === this.contentsTypeList.length > 0
-                            ? d.filter(item => this.contentsTypeList.includes(item.value))
+                            ? d.filter((item) => this.contentsTypeList.includes(item.value))
                             : d;
                     if (this.searchFilters?.[0]?.name !== filterName) {
                         searchFilters.push({
@@ -209,7 +209,7 @@ export default {
 
                     searchFiltersValues[filterName] =
                         this.searchFiltersValues[filterName] &&
-                        searchOptions.some(item => this.searchFiltersValues[filterName].value === item.value)
+                        searchOptions.some((item) => this.searchFiltersValues[filterName].value === item.value)
                             ? this.searchFiltersValues[filterName]
                             : searchOptions[0];
                 });

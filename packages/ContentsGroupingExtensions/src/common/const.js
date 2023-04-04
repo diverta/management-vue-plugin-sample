@@ -19,10 +19,10 @@ export const EXT_TYPE = {
     // Counter: 34,
 };
 
-export const getExtTypeByValue = value => {
-    const objectFlip = obj => {
+export const getExtTypeByValue = (value) => {
+    const objectFlip = (obj) => {
         const ret = {};
-        Object.keys(obj).forEach(key => {
+        Object.keys(obj).forEach((key) => {
             ret[obj[key]] = key;
         });
         return ret;

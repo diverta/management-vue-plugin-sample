@@ -13,7 +13,7 @@ export default class FullScreen extends Plugin {
         const editor = this.editor;
         let currentState = 'normal';
 
-        editor.ui.componentFactory.add('fullScreen', locale => {
+        editor.ui.componentFactory.add('fullScreen', (locale) => {
             const view = new ButtonView(locale);
             view.set({
                 label: 'FullScreen',

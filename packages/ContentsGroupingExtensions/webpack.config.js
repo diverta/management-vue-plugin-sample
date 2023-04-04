@@ -1,13 +1,14 @@
 const fs = require('fs');
 const path = require('path');
 const { DefinePlugin } = require('webpack');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const { VueLoaderPlugin } = require('vue-loader');
 const MonacoEditorPlugin = require('monaco-editor-webpack-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+const ESLintPlugin = require('eslint-webpack-plugin');
 
 // eslint-disable-next-line no-unused-vars
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
@@ -25,6 +26,7 @@ const eslintNoFail = !production && process.env.RCMS_ESLINT_NO_FAIL_DEV;
 
 const protocol = config.https ? 'https' : 'http';
 
+/** @type {import('webpack').Configuration} */
 module.exports = {
     mode: production ? 'production' : 'development',
     entry: pages,
@@ -40,18 +42,22 @@ module.exports = {
         rules: [
             {
                 test: /src\/components\/ChildWysiwyg\/icons\//,
-                use: ['raw-loader'],
+                type: 'asset/source',
             },
             {
                 test: /ckeditor5-[^/\\]+[/\\]theme[/\\]icons[/\\][^/\\]+\.svg$/,
-                use: ['raw-loader'],
+                type: 'asset/source',
             },
             {
                 test: /\.(png|jpe?g|gif|svg|woff2?|eot|ttf|otf)$/,
-                loader: 'url-loader',
-                options: {
-                    name: '[name].[hash].[ext]',
-                    limit: 8192,
+                type: 'asset',
+                parser: {
+                    dataUrlCondition: {
+                        maxSize: 8 * 1024 // 8kb
+                    }
+                },
+                generator: {
+                    filename: '[name].[hash].[ext]'
                 },
                 exclude: [
                     /ckeditor5-[^/\\]+[/\\]theme[/\\]icons[/\\][^/\\]+\.svg$/,
@@ -80,16 +86,6 @@ module.exports = {
                         }),
                     },
                 ],
-            },
-            {
-                enforce: 'pre',
-                test: /\.(js|vue)$/,
-                loader: 'eslint-loader',
-                options: {
-                    failOnError: !eslintNoFail,
-                    emitWarning: eslintNoFail,
-                },
-                exclude: /node_modules/,
             },
             {
                 test: /\.vue$/,
@@ -124,6 +120,11 @@ module.exports = {
         new MonacoEditorPlugin({
             languages: ['css', 'html', 'javascript', 'typescript'],
         }),
+        new ESLintPlugin({
+            extensions: ['js', 'vue'],
+            failOnError: !eslintNoFail,
+            emitWarning: eslintNoFail,
+        })
         // new BundleAnalyzerPlugin(),
     ],
     optimization: {
@@ -139,10 +140,7 @@ module.exports = {
                     },
                 },
             }),
-            new OptimizeCSSAssetsPlugin({
-                cssProcessor: require('cssnano'),
-                cssProcessorOptions: { discardComments: { removeAll: true } },
-            }),
+            new CssMinimizerPlugin(),
         ],
         splitChunks: {
             cacheGroups: {

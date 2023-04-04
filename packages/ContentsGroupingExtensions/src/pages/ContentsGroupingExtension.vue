@@ -5,7 +5,7 @@
                 v-bind="{
                     ...config.parent,
                 }"
-                @change="ids => (selectedIDs = ids)"
+                @change="(ids) => (selectedIDs = ids)"
             >
                 <div v-for="childConfig in config.children" :key="childConfig.no">
                     <!-- eslint-disable-next-line vue/require-component-is -->
@@ -67,13 +67,13 @@ export default {
     },
     computed: {
         config() {
-            const parent = this.extConfig.find(d => d.ext_group_parent_ext_col === '');
+            const parent = this.extConfig.find((d) => d.ext_group_parent_ext_col === '');
             const children = this.extConfig
-                .filter(d => d.ext_group_parent_ext_col !== '')
+                .filter((d) => d.ext_group_parent_ext_col !== '')
                 // sort by selectedIDs order, in order to display childrens as user specified.
                 // e.g.) if user specified 90,1,25, then 90,1,25 order should be displayed (not 1,25,90).
                 .sort((a, b) => {
-                    const ids = this.selectedIDs.map(no => `${no}`.padStart(2, '0'));
+                    const ids = this.selectedIDs.map((no) => `${no}`.padStart(2, '0'));
                     return ids.indexOf(a.no) - ids.indexOf(b.no);
                 });
 
@@ -83,10 +83,10 @@ export default {
             };
         },
         getIsActivated() {
-            return childConfig => this.selectedIDs.map(no => `${no}`.padStart(2, '0')).includes(childConfig.no);
+            return (childConfig) => this.selectedIDs.map((no) => `${no}`.padStart(2, '0')).includes(childConfig.no);
         },
         getChildComponentProps() {
-            return childConfig => {
+            return (childConfig) => {
                 const extType = getExtTypeByValue(`${childConfig.ext_type}`);
                 if (extType === undefined) {
                     // eslint-disable-next-line no-console
@@ -133,7 +133,7 @@ export default {
         // since multiple custom components do not have its index number, gets it from CSS picking.
         const iteratableSelfComponentIndex =
             window.document.querySelectorAll(`.${this.distinguishClassName}`).length - 1;
-        this.extConfig = this.extConfig.map(extConfig =>
+        this.extConfig = this.extConfig.map((extConfig) =>
             this.getExtConfigWithStoredValue(extConfig, iteratableSelfComponentIndex)
         );
     },
