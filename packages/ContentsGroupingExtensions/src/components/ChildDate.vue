@@ -149,7 +149,6 @@ export default {
         },
     },
     mounted() {
-        console.log('DATE!', this.$attrs.value?.h, this.$attrs.value?.i);
         if (this.$refs.hour && this.$attrs.value?.h !== undefined) {
             const hourSelect = Array.from(this.$refs.hour.children).find(({ label }) => label === this.$attrs.value?.h);
             if (hourSelect) {
