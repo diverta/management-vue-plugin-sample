@@ -18,7 +18,7 @@
 
             <template v-if="$attrs.options.add_time">
                 <label>時刻:</label>
-                <select style="width: 55px" :name="`${$attrs.name}[h]`">
+                <select ref="hour" style="width: 55px" :name="`${$attrs.name}[h]`">
                     <option label="00" value="0">00</option>
                     <option label="01" value="1">01</option>
                     <option label="02" value="2">02</option>
@@ -45,7 +45,7 @@
                     <option label="23" value="23">23</option>
                 </select>
                 :
-                <select style="width: 55px" :name="`${$attrs.name}[i]`">
+                <select ref="minute" style="width: 55px" :name="`${$attrs.name}[i]`">
                     <option label="00" value="0">00</option>
                     <option label="01" value="1">01</option>
                     <option label="02" value="2">02</option>
@@ -147,6 +147,23 @@ export default {
             scriptElement.innerHTML = script;
             this.$refs.content.appendChild(scriptElement);
         },
+    },
+    mounted() {
+        console.log('DATE!', this.$attrs.value?.h, this.$attrs.value?.i);
+        if (this.$refs.hour && this.$attrs.value?.h !== undefined) {
+            const hourSelect = Array.from(this.$refs.hour.children).find(({ label }) => label === this.$attrs.value?.h);
+            if (hourSelect) {
+                hourSelect.selected = true;
+            }
+        }
+        if (this.$refs.minute && this.$attrs.value?.i !== undefined) {
+            const minuteSelect = Array.from(this.$refs.minute.children).find(
+                ({ label }) => label === this.$attrs.value?.i
+            );
+            if (minuteSelect) {
+                minuteSelect.selected = true;
+            }
+        }
     },
     watch: {
         activated: {
