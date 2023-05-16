@@ -36,6 +36,7 @@ import PasteFromOffice from '@ckeditor/ckeditor5-paste-from-office/src/pastefrom
 import FindAndReplace from '@ckeditor/ckeditor5-find-and-replace/src/findandreplace';
 
 import FullScreen from './plugins/fullscreen';
+import Templates from './plugins/templates';
 
 export default [
     Essentials,
@@ -74,4 +75,5 @@ export default [
     CodeBlock,
     PasteFromOffice,
     FindAndReplace,
+    Templates,
 ];

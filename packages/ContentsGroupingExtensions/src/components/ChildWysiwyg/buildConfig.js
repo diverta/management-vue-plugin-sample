@@ -88,6 +88,7 @@ export default function buildConfig(option = {}) {
                   'undo',
                   'redo',
                   'findAndReplace',
+                  'templates',
               ];
 
     return {

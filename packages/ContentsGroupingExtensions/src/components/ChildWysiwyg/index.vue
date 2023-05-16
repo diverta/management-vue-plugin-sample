@@ -15,6 +15,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 import buildConfig from './buildConfig';
 import ClassicEditor from '@ckeditor/ckeditor5-editor-classic/src/classiceditor';
 
@@ -52,6 +53,24 @@ export default {
         async createEditor() {
             const config = buildConfig({ ...this.$attrs, ...(this.$attrs.options || {}) });
             try {
+                config.templatesConfig = {
+                    templates: {},
+                    labels: {
+                        select_template: 'テンプレート一覧',
+                        replace_content: 'コンテンツをすべて置き換える',
+                        templates_list: 'テンプレート',
+                    },
+                };
+                const templates = await this.loadTemplates();
+                if (templates) {
+                    templates.forEach((template) => {
+                        config.templatesConfig.templates[template.wysiwyg_template_id] = {
+                            name: template.wysiwyg_template_nm,
+                            template: template.body,
+                        };
+                    });
+                }
+
                 this.editor = await ClassicEditor.create(this.$refs['editor'], config);
                 this.editor.on('fullscreenMode', this.fullscreenMode);
                 this.editor.model.document.on('change', this.handleOnChange);
@@ -65,6 +84,16 @@ export default {
         },
         handleOnChange() {
             this.editorValue = this.editor.getData();
+        },
+        async loadTemplates() {
+            const templatesUrl = `/management/site/site_wysiwygtemplate_list/?pageID=1&per_page=1000`;
+
+            const resp = await axios(templatesUrl, {
+                method: 'GET',
+                headers: { Accept: 'application/json' },
+                withCredentials: true,
+            });
+            return resp?.data?.template_list.filter((item) => item.open_flg === 1);
         },
     },
 
