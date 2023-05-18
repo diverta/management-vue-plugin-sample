@@ -33,6 +33,7 @@ export default {
 
     data() {
         return {
+            creationStarted: false,
             loaded: false,
             fullscreen: false,
             // customPluginList: [],
@@ -53,6 +54,10 @@ export default {
         async createEditor() {
             const config = buildConfig({ ...this.$attrs, ...(this.$attrs.options || {}) });
             try {
+                if (this.editor) {
+                    this.editor.destroy();
+                }
+
                 config.templatesConfig = {
                     templates: {},
                     labels: {
@@ -102,7 +107,8 @@ export default {
             immediate: true,
             deep: true,
             handler(activated) {
-                if (activated && !this.editor) {
+                if (activated && !this.creationStarted && !this.editor) {
+                    this.creationStarted = true;
                     this.$nextTick(() => this.createEditor());
                 }
             },
