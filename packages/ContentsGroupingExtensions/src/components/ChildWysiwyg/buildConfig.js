@@ -126,14 +126,16 @@ export default function buildConfig(option = {}) {
                 { model: 'heading4', view: 'h4', title: 'H4', class: 'ck-heading_heading4' },
             ],
         },
-        allow: [
-            {
-                name: /.*/,
-                attributes: true,
-                classes: true,
-                styles: true,
-            },
-        ],
+        htmlSupport: {
+            allow: [
+                {
+                    name: /.*/,
+                    attributes: true,
+                    classes: true,
+                    styles: true,
+                },
+            ],
+        },
         fontSize: {
             options: option.use_font_size_px
                 ? ['default', 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25]
