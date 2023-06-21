@@ -46,7 +46,12 @@
                 </div>
             </div>
             <div>
-                <input :name="`del_file_${$attrs.ext_col_nm}-0`" type="checkbox" value="1" @change="onApplyRemoves" />
+                <input
+                    :name="`del_file_${$attrs.ext_col_nm}-${$attrs.ext_index - 1}`"
+                    type="checkbox"
+                    value="1"
+                    @change="onApplyRemoves"
+                />
                 削除する
             </div>
             <p></p>
