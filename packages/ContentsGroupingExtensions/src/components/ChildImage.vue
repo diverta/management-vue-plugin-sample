@@ -46,12 +46,7 @@
                 </div>
             </div>
             <div>
-                <input
-                    :name="`del_file_${$attrs.ext_col_nm}-${$attrs.ext_index - 1}`"
-                    type="checkbox"
-                    value="1"
-                    @change="onApplyRemoves"
-                />
+                <input :name="delFileName" type="checkbox" value="1" @change="onApplyRemoves" />
                 削除する
             </div>
             <p></p>
@@ -73,6 +68,14 @@ export default {
             accepts: ['image/jpeg', 'image/gif', 'image/png', 'image/svg+xml'],
             description: '',
         };
+    },
+    computed: {
+        delFileName() {
+            const fileURL = this.fileURL || '';
+            const regex = /\/\d+_(\w+)\.\w+$/;
+            const fileName = fileURL.match(regex)?.[1];
+            return fileName ? `del_file_${fileName}` : undefined;
+        },
     },
     methods: {
         onApplyRemoves() {
