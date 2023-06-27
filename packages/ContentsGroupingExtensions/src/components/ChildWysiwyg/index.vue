@@ -42,7 +42,6 @@ export default {
             // customPluginList: [],
             editor: null,
             editorValue: this.$attrs.value || '',
-            customCss: this.$attrs.custom_css || '',
             wysiwygWidth: this.$attrs.width || 800,
             wysiwygHeight: this.$attrs.width || 200,
             resourcePath: this.$attrs.resource || '',
