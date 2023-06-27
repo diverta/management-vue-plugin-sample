@@ -29,6 +29,9 @@ export default {
                 '--ckui-height': this.wysiwygHeight + 'px',
             };
         },
+        customCss() {
+            return /custom_css::(\S+.css)/g.exec(this.$attrs?.ext_option || '')?.[1];
+        },
     },
 
     data() {
