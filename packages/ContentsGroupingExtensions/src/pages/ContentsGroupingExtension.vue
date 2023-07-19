@@ -62,10 +62,6 @@ export default {
             selectedIDs: [],
             // in order to determine what the index number the current component is (within iteratable extension), see `mounted()`.
             distinguishClassName: 'js__contents-grouping-extension',
-            extTextItem: {
-                name: 'ext_text',
-                value: 'Something',
-            },
             isLoaded: false,
         };
     },
