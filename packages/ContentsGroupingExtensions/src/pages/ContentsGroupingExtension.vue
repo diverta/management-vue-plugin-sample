@@ -1,5 +1,5 @@
 <template>
-    <td v-if="extConfig" class="js-expand" :class="distinguishClassName">
+    <td v-if="extConfig && isLoaded" class="js-expand" :class="distinguishClassName">
         <dl>
             <ParentDropdown
                 v-bind="{
@@ -19,9 +19,6 @@
                     />
                 </div>
             </ParentDropdown>
-            <template v-if="isLoaded">
-                <ExtText :item="extTextItem" />
-            </template>
         </dl>
     </td>
 </template>
@@ -47,7 +44,6 @@ export default {
         ParentDropdown,
         ChildImage: () => import(/* webpackChunkName: "ChildImage" */ '@/components/ChildImage.vue'),
         ChildFileManager: () => import(/* webpackChunkName: "ChildFileManager" */ '@/components/ChildFileManager.vue'),
-        ChildText: () => import(/* webpackChunkName: "ChildText" */ '@/components/ChildText.vue'),
         ChildTextarea: () => import(/* webpackChunkName: "ChildTextarea" */ '@/components/ChildTextarea.vue'),
         ChildWysiwyg: () => import(/* webpackChunkName: "ChildWysiwyg" */ '@/components/ChildWysiwyg/index.vue'),
         ChildMultipleCheckbox: () =>
@@ -159,7 +155,7 @@ export default {
             document.body.appendChild(script);
 
             script.onload = () => {
-                this.$options.components.ExtText = window['common/components/extensions/ExtText'];
+                this.$options.components.ChildText = window['common/components/extensions/ExtText'];
                 this.isLoaded = true;
             };
         };
