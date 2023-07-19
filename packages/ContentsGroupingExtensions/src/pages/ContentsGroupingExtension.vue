@@ -141,17 +141,20 @@ export default {
             this.getExtConfigWithStoredValue(extConfig, iteratableSelfComponentIndex)
         );
 
-        const kurocoCoreManifestUrl = '/management/js/rcms-vue/components/rcms-mng/manifest.json?v=' + Date.now();
+        const prefixUrl = '/management/js/rcms-vue/components/rcms-mng/';
+
+        // load manifest.json to get each ext components' file name.
+        const kurocoCoreManifestUrl = prefixUrl + 'manifest.json?v=' + Date.now();
         const manifest = await fetch(kurocoCoreManifestUrl).then((res) => res.json());
 
+        // load vendor script first, then load each ext components.
         const vendor = document.createElement('script');
-        vendor.src = '/management/js/rcms-vue/components/rcms-mng/' + manifest['rcms-mng-vendors.js'];
+        vendor.src = prefixUrl + manifest['rcms-mng-vendors.js'];
         document.body.appendChild(vendor);
 
         vendor.onload = () => {
             const script = document.createElement('script');
-            script.src =
-                '/management/js/rcms-vue/components/rcms-mng/' + manifest['common/components/extensions/ExtText.js'];
+            script.src = prefixUrl + manifest['common/components/extensions/ExtText.js'];
             document.body.appendChild(script);
 
             script.onload = () => {
