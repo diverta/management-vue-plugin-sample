@@ -19,6 +19,9 @@
                     />
                 </div>
             </ParentDropdown>
+            <template v-if="isLoaded">
+                <ExtText :item="extTextItem" />
+            </template>
         </dl>
     </td>
 </template>
@@ -63,6 +66,11 @@ export default {
             selectedIDs: [],
             // in order to determine what the index number the current component is (within iteratable extension), see `mounted()`.
             distinguishClassName: 'js__contents-grouping-extension',
+            extTextItem: {
+                name: 'ext_text',
+                value: 'Something',
+            },
+            isLoaded: false,
         };
     },
     computed: {
@@ -129,13 +137,32 @@ export default {
     created() {
         this.extConfig.sort(this.sortByExtOrderNumber);
     },
-    mounted() {
+    async mounted() {
         // since multiple custom components do not have its index number, gets it from CSS picking.
         const iteratableSelfComponentIndex =
             window.document.querySelectorAll(`.${this.distinguishClassName}`).length - 1;
         this.extConfig = this.extConfig.map((extConfig) =>
             this.getExtConfigWithStoredValue(extConfig, iteratableSelfComponentIndex)
         );
+
+        const kurocoCoreManifestUrl = '/management/js/rcms-vue/components/rcms-mng/manifest.json?v=' + Date.now();
+        const manifest = await fetch(kurocoCoreManifestUrl).then((res) => res.json());
+
+        const vendor = document.createElement('script');
+        vendor.src = '/management/js/rcms-vue/components/rcms-mng/' + manifest['rcms-mng-vendors.js'];
+        document.body.appendChild(vendor);
+
+        vendor.onload = () => {
+            const script = document.createElement('script');
+            script.src =
+                '/management/js/rcms-vue/components/rcms-mng/' + manifest['common/components/extensions/ExtText.js'];
+            document.body.appendChild(script);
+
+            script.onload = () => {
+                this.$options.components.ExtText = window['common/components/extensions/ExtText'];
+                this.isLoaded = true;
+            };
+        };
     },
 };
 </script>
