@@ -47,7 +47,6 @@ export default {
         ChildWysiwyg: () => import(/* webpackChunkName: "ChildWysiwyg" */ '@/components/ChildWysiwyg/index.vue'),
         ChildMultipleCheckbox: () =>
             import(/* webpackChunkName: "ChildMultipleCheckbox" */ '@/components/ChildMultipleCheckbox.vue'),
-        ChildLink: () => import(/* webpackChunkName: "ChildLink" */ '@/components/ChildLink.vue'),
         ChildSelectbox: () => import(/* webpackChunkName: "ChildSelectbox" */ '@/components/ChildSelectbox.vue'),
         ChildMap: () => import(/* webpackChunkName: "ChildMap" */ '@/components/ChildMap.vue'),
         ChildRelationField: () =>
@@ -153,7 +152,7 @@ export default {
 
         try {
             await this.loadScript(prefixUrl + manifest['rcms-mng-vendors.js']);
-            const coreComponents = ['Text', 'Textarea'];
+            const coreComponents = ['Text', 'Textarea', 'Link'];
             await Promise.all(
                 coreComponents.map((component) =>
                     this.loadScript(prefixUrl + manifest['common/components/extensions/Ext' + component + '.js'])
