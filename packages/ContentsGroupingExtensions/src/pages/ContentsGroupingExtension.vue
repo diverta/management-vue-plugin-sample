@@ -44,7 +44,6 @@ export default {
         ParentDropdown,
         ChildImage: () => import(/* webpackChunkName: "ChildImage" */ '@/components/ChildImage.vue'),
         ChildFileManager: () => import(/* webpackChunkName: "ChildFileManager" */ '@/components/ChildFileManager.vue'),
-        ChildTextarea: () => import(/* webpackChunkName: "ChildTextarea" */ '@/components/ChildTextarea.vue'),
         ChildWysiwyg: () => import(/* webpackChunkName: "ChildWysiwyg" */ '@/components/ChildWysiwyg/index.vue'),
         ChildMultipleCheckbox: () =>
             import(/* webpackChunkName: "ChildMultipleCheckbox" */ '@/components/ChildMultipleCheckbox.vue'),
@@ -125,6 +124,15 @@ export default {
         sortByExtOrderNumber(extA, extB) {
             return extB.ext_order_no - extA.ext_order_no;
         },
+        loadScript(src) {
+            return new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                script.src = src;
+                script.onload = resolve;
+                script.onerror = reject;
+                document.body.appendChild(script);
+            });
+        },
     },
     created() {
         this.extConfig.sort(this.sortByExtOrderNumber);
@@ -143,21 +151,23 @@ export default {
         const kurocoCoreManifestUrl = prefixUrl + 'manifest.json?v=' + Date.now();
         const manifest = await fetch(kurocoCoreManifestUrl).then((res) => res.json());
 
-        // load vendor script first, then load each ext components.
-        const vendor = document.createElement('script');
-        vendor.src = prefixUrl + manifest['rcms-mng-vendors.js'];
-        document.body.appendChild(vendor);
+        try {
+            await this.loadScript(prefixUrl + manifest['rcms-mng-vendors.js']);
+            const coreComponents = ['Text', 'Textarea'];
+            await Promise.all(
+                coreComponents.map((component) =>
+                    this.loadScript(prefixUrl + manifest['common/components/extensions/Ext' + component + '.js'])
+                )
+            );
 
-        vendor.onload = () => {
-            const script = document.createElement('script');
-            script.src = prefixUrl + manifest['common/components/extensions/ExtText.js'];
-            document.body.appendChild(script);
+            coreComponents.forEach((component) => {
+                this.$options.components[`Child${component}`] = window['common/components/extensions/Ext' + component];
+            });
 
-            script.onload = () => {
-                this.$options.components.ChildText = window['common/components/extensions/ExtText'];
-                this.isLoaded = true;
-            };
-        };
+            this.isLoaded = true;
+        } catch (error) {
+            console.error(`Failed to load script: ${error}`);
+        }
     },
 };
 </script>
