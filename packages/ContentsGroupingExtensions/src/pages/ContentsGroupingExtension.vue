@@ -152,7 +152,7 @@ export default {
 
         try {
             await this.loadScript(prefixUrl + manifest['rcms-mng-vendors.js']);
-            const coreComponents = ['Text', 'Textarea', 'Link', 'RelationFld'];
+            const coreComponents = ['Text', 'Textarea', 'Link'];
             await Promise.all(
                 coreComponents.map((component) =>
                     this.loadScript(prefixUrl + manifest['common/components/extensions/Ext' + component + '.js'])
