@@ -15,6 +15,7 @@
                             ...getChildComponentProps(childConfig),
                             activated: getIsActivated(childConfig),
                             topics_group_id,
+                            isLoaded: isLoaded,
                         }"
                     />
                 </div>
@@ -44,9 +45,12 @@ export default {
         ParentDropdown,
         ChildImage: () => import(/* webpackChunkName: "ChildImage" */ '@/components/ChildImage.vue'),
         ChildFileManager: () => import(/* webpackChunkName: "ChildFileManager" */ '@/components/ChildFileManager.vue'),
+        ChildText: () => import(/* webpackChunkName: "ChildText" */ '@/components/ChildText.vue'),
+        ChildTextarea: () => import(/* webpackChunkName: "ChildTextarea" */ '@/components/ChildTextarea.vue'),
         ChildWysiwyg: () => import(/* webpackChunkName: "ChildWysiwyg" */ '@/components/ChildWysiwyg/index.vue'),
         ChildMultipleCheckbox: () =>
             import(/* webpackChunkName: "ChildMultipleCheckbox" */ '@/components/ChildMultipleCheckbox.vue'),
+        ChildLink: () => import(/* webpackChunkName: "ChildLink" */ '@/components/ChildLink.vue'),
         ChildSelectbox: () => import(/* webpackChunkName: "ChildSelectbox" */ '@/components/ChildSelectbox.vue'),
         ChildMap: () => import(/* webpackChunkName: "ChildMap" */ '@/components/ChildMap.vue'),
         ChildRelationField: () =>
@@ -158,10 +162,6 @@ export default {
                     this.loadScript(prefixUrl + manifest['common/components/extensions/Ext' + component + '.js'])
                 )
             );
-
-            coreComponents.forEach((component) => {
-                this.$options.components[`Child${component}`] = window['common/components/extensions/Ext' + component];
-            });
 
             this.isLoaded = true;
         } catch (error) {
