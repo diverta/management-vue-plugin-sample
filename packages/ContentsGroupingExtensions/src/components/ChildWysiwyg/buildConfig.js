@@ -56,7 +56,7 @@ export function createFontBackgroundColor(option = {}) {
 }
 
 export default function buildConfig(option = {}) {
-    const toolbarItems =
+    let toolbarItems =
         option.toolbar === 'basic'
             ? ['bold', 'italic', '|', 'numberedList', 'bulletedList', '|', 'link']
             : [
@@ -90,6 +90,9 @@ export default function buildConfig(option = {}) {
                   'findAndReplace',
                   'templates',
               ];
+    option.removePlugins?.split(',')?.forEach((plugin) => {
+        toolbarItems = toolbarItems.filter((item) => item !== plugin);
+    });
 
     return {
         toolbar: {
