@@ -8,7 +8,7 @@
         <textarea
             :name="$attrs.name"
             v-html="editorValue"
-            :style="{ width: `${wysiwygWidth}px`, height: `${wysiwygHeight + 42}px` }"
+            :style="{ width: `${wysiwygWidth}`, height: `${wysiwygHeight + 42}` }"
         ></textarea>
         <div class="hint">{{ ck_error }}</div>
     </div>
@@ -25,8 +25,8 @@ export default {
     computed: {
         cssProps() {
             return {
-                width: this.wysiwygWidth + 'px',
-                '--ckui-height': this.wysiwygHeight + 'px',
+                width: this.wysiwygWidth,
+                '--ckui-height': this.wysiwygHeight,
             };
         },
         customCss() {
@@ -42,9 +42,9 @@ export default {
             // customPluginList: [],
             editor: null,
             editorValue: this.$attrs.value || '',
-            wysiwygWidth: this.$attrs.width || 800,
-            wysiwygHeight: this.$attrs.width || 200,
-            resourcePath: this.$attrs.resource || '',
+            wysiwygWidth: this.$attrs.options?.height || this.$attrs.wysiwygHeight || '800px',
+            wysiwygHeight: this.$attrs.options?.width || this.$attrs.wysiwygWidth || '200px',
+            resourcePath: this.$attrs.options?.resource || this.$attrs.resourcePath || '',
             selection: null,
             range: null,
             flask: null,
