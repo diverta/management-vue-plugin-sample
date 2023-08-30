@@ -162,10 +162,18 @@ export default {
         try {
             await this.loadScript(prefixUrl + manifest['rcms-mng-vendors.js']);
             const coreComponents = ['Text', 'Textarea', 'Link'];
+            // Remove component from coreComponents when it is already loaded.
+            coreComponents.forEach((component) => {
+                if (window['common/components/extensions/Ext' + component]) {
+                    coreComponents.splice(coreComponents.indexOf(component), 1);
+                }
+            });
             await Promise.all(
-                coreComponents.map((component) =>
-                    this.loadScript(prefixUrl + manifest['common/components/extensions/Ext' + component + '.js'])
-                )
+                coreComponents.map((component) => {
+                    return this.loadScript(
+                        prefixUrl + manifest['common/components/extensions/Ext' + component + '.js']
+                    );
+                })
             );
 
             this.isLoaded = true;
