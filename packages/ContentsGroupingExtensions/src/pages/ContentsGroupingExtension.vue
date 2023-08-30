@@ -37,6 +37,11 @@ Vue.use(RcmsI18n);
 import { EXT_TYPE, getExtTypeByValue } from '@/common/const.js';
 import { globalState } from '@/common/global-state';
 
+// Global object to track loaded and loading scripts
+// This is needed because every loop of the same field will mount this component with different Vue instance
+// and we need to make sure that the script is loaded only once
+window.scriptLoadingTracker = window.scriptLoadingTracker || {};
+
 export default {
     name: 'ContentsGroupingExtension',
     props: {
@@ -133,10 +138,48 @@ export default {
         },
         loadScript(src) {
             return new Promise((resolve, reject) => {
+                // If the script is already loaded, resolve immediately
+                if (window.scriptLoadingTracker[src]?.status === 'loaded') {
+                    resolve();
+                    return;
+                }
+
+                // If the script is being loaded, wait for it to complete
+                if (window.scriptLoadingTracker[src]?.status === 'loading') {
+                    window.scriptLoadingTracker[src].promise.then(resolve, reject);
+                    return;
+                }
+
+                // If the script hasn't started loading, start the loading process
                 const script = document.createElement('script');
                 script.src = src;
-                script.onload = resolve;
-                script.onerror = reject;
+
+                // Initialize the script loading state and promise
+                let resolveLoading, rejectLoading;
+                const loadingPromise = new Promise((res, rej) => {
+                    resolveLoading = res;
+                    rejectLoading = rej;
+                });
+
+                window.scriptLoadingTracker[src] = {
+                    status: 'loading',
+                    promise: loadingPromise,
+                };
+
+                script.onload = () => {
+                    // Mark the script as loaded and resolve the promise
+                    window.scriptLoadingTracker[src].status = 'loaded';
+                    resolveLoading();
+                    resolve();
+                };
+
+                script.onerror = () => {
+                    // Mark the script as failed and reject the promise
+                    window.scriptLoadingTracker[src].status = 'failed';
+                    rejectLoading();
+                    reject();
+                };
+
                 document.body.appendChild(script);
             });
         },
