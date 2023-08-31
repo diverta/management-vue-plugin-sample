@@ -39,9 +39,6 @@ export default {
             flagToLoadOnce: false,
         };
     },
-    mounted() {
-        console.log(this.$attrs);
-    },
     watch: {
         isLoaded: {
             immediate: true,

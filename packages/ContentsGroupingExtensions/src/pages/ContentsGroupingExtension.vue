@@ -34,6 +34,8 @@ import RcmsI18n from '@/common/i18n/rcms-i18n.js';
 window.rcmsJS.vue.registerVM(Vue, rcms_js_config.publicPath); // eslint-disable-line
 Vue.use(RcmsI18n);
 
+import store from '@/store';
+
 import { EXT_TYPE, getExtTypeByValue } from '@/common/const.js';
 import { globalState } from '@/common/global-state';
 
@@ -187,6 +189,7 @@ export default {
     created() {
         this.extConfig.sort(this.sortByExtOrderNumber);
         globalState.siteLang = this.smarty_lang;
+        this.$store = store;
     },
     async mounted() {
         // since multiple custom components do not have its index number, gets it from CSS picking.
@@ -204,7 +207,7 @@ export default {
 
         try {
             await this.loadScript(prefixUrl + manifest['rcms-mng-vendors.js']);
-            const coreComponents = ['Text', 'Textarea', 'Link'];
+            const coreComponents = ['Text', 'Textarea', 'Link', 'RelationFld'];
             // Remove component from coreComponents when it is already loaded.
             coreComponents.forEach((component) => {
                 if (window['common/components/extensions/Ext' + component]) {
