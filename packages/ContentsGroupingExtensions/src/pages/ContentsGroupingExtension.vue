@@ -25,6 +25,7 @@
 
 <script>
 /* eslint-disable vue/no-unused-components */
+import axios from 'axios';
 
 import ParentDropdown from '@/components/ParentDropdown.vue';
 
@@ -39,6 +40,7 @@ export default {
         request: { type: Object, required: false },
         extConfig: { type: Array, required: true },
         topics_group_id: { type: Number, required: true },
+        preserve_keys_option: { type: Boolean, default: false },
     },
     components: {
         ParentDropdown,
@@ -125,9 +127,27 @@ export default {
         sortByExtOrderNumber(extA, extB) {
             return extB.ext_order_no - extA.ext_order_no;
         },
+        async getKeyValueMaster() {
+            const url = 'https://yabe.g.kuroco.app/rcms-api/4/master?csvtable_id=1'; // TODO どう指定？
+            const resp = await axios(url, {
+                method: 'GET',
+                headers: { Accept: 'application/json' },
+                withCredentials: true,
+            });
+            const table = (resp?.data?.list || [])
+                ?.filter((d, idx) => idx !== 0)
+                ?.map(([k, v]) => ({
+                    [k]: v,
+                }));
+            console.log('getKeyValueMaster', table);
+        },
     },
-    created() {
+    async created() {
         this.extConfig.sort(this.sortByExtOrderNumber);
+        // TODO どう指定？
+        if (this.preserve_keys_option) {
+            await this.getKeyValueMaster();
+        }
     },
     mounted() {
         // since multiple custom components do not have its index number, gets it from CSS picking.
