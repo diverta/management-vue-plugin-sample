@@ -32,7 +32,10 @@ import ParentDropdown from '@/components/ParentDropdown.vue';
 import Vue from 'vue';
 import RcmsI18n from '@/common/i18n/rcms-i18n.js';
 window.rcmsJS.vue.registerVM(Vue, rcms_js_config.publicPath); // eslint-disable-line
+
 Vue.use(RcmsI18n);
+import VueLocalStorage from 'vue-localstorage';
+Vue.use(VueLocalStorage);
 
 import store from '@/store';
 
@@ -207,7 +210,7 @@ export default {
 
         try {
             await this.loadScript(prefixUrl + manifest['rcms-mng-vendors.js']);
-            const coreComponents = ['Text', 'Textarea', 'Link', 'RelationFld', 'Selectbox', 'Checkbox'];
+            const coreComponents = ['Text', 'Textarea', 'Link', 'RelationFld', 'Selectbox', 'Checkbox', 'Html'];
             // Remove component from coreComponents when it is already loaded.
             coreComponents.forEach((component) => {
                 if (window['common/components/extensions/Ext' + component]) {

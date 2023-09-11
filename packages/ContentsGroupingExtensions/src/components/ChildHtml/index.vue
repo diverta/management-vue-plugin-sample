@@ -7,61 +7,42 @@
             :data-ext_type="$attrs.ext_type"
             :data-default_value="$attrs.default_value"
         >
-            <template v-if="$attrs.options.dont_use_editor">
-                <textarea :name="$attrs.name" v-bind="plainInputAttrs" v-model="code"></textarea><br />
-            </template>
-            <template v-else>
-                <div v-bind="editorAttrs">
-                    <input :name="$attrs.name" :id="`code-source--${$attrs.name}`" type="hidden" v-model="code" />
-                    <br />
-                    <MonacoEditor
-                        v-if="$attrs.activated"
-                        v-bind="{ ...$attrs, code, opt: $attrs.options }"
-                        @input="(v) => (code = v)"
-                    />
-                </div>
-            </template>
+            <ExtHtml
+                v-if="flagToLoadOnce"
+                :name="$attrs.name"
+                :value="$attrs.value"
+                :language="'html'"
+                :source_id="`code-source--` + $attrs.name"
+                id=""
+                :simplified="true"
+                :width="$attrs.options.width ? $attrs.options.width : '800px'"
+                :height="$attrs.options.height ? $attrs.options.height : '450px'"
+                :dont_use_editor="!!$attrs.options.dont_use_editor"
+                :ext_help_msg="$attrs.ext_help_msg"
+            />
         </dd>
     </div>
 </template>
 
 <script>
 export default {
-    inheritAttrs: false,
-    components: {
-        MonacoEditor: () => import('./MonacoEditor.vue'),
+    props: {
+        isLoaded: { type: Boolean, required: true },
     },
     data() {
         return {
-            code: this.$attrs.value || '',
+            flagToLoadOnce: false,
         };
     },
-    computed: {
-        plainInputAttrs() {
-            const wh = {
-                width: this.$attrs?.options?.width ? this.$attrs.options.width + 'px' : '100%',
-                height: this.$attrs?.options?.height ? this.$attrs.options.height + 'px' : '100%',
-            };
-            if (!wh.width && !wh.height) {
-                return {
-                    rows: 4,
-                    cols: 60,
-                };
-            }
-            return { style: wh };
-        },
-        editorAttrs() {
-            const wh = {
-                width: this.$attrs?.options?.width ? `${parseInt(this.$attrs.options.width) + 30}px` : '800px',
-                'min-height': this.$attrs?.options?.height ? `${parseInt(this.$attrs.options.height) + 90}px` : '530px',
-            };
-            if (!wh.width && !wh.height) {
-                return {
-                    rows: 4,
-                    cols: 60,
-                };
-            }
-            return wh;
+    watch: {
+        isLoaded: {
+            immediate: true,
+            handler(newVal) {
+                if (newVal && !this.flagToLoadOnce) {
+                    this.$options.components.ExtHtml = window['common/components/extensions/ExtHtml'];
+                    this.flagToLoadOnce = true;
+                }
+            },
         },
     },
 };
