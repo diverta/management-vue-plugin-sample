@@ -68,8 +68,8 @@ export default {
         ChildSelectbox: () => import(/* webpackChunkName: "ChildSelectbox" */ '@/components/ChildSelectbox.vue'),
         ChildMap: () => import(/* webpackChunkName: "ChildMap" */ '@/components/ChildMap.vue'),
         ChildRelationField: () =>
-            import(/* webpackChunkName: "ChildRelationField" */ '@/components/ChildRelationField/index.vue'),
-        ChildHtml: () => import(/* webpackChunkName: "ChildHtml" */ '@/components/ChildHtml/index.vue'),
+            import(/* webpackChunkName: "ChildRelationField" */ '@/components/ChildRelationField.vue'),
+        ChildHtml: () => import(/* webpackChunkName: "ChildHtml" */ '@/components/ChildHtml.vue'),
         ChildDate: () => import(/* webpackChunkName: "ChildDate" */ '@/components/ChildDate.vue'),
     },
     data() {
