@@ -224,6 +224,7 @@ export default {
                 'Wysiwyg',
                 'Image',
                 'FileManager',
+                'Location',
             ];
             // Remove component from coreComponents when it is already loaded.
             coreComponents.forEach((component) => {
