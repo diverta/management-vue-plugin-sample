@@ -15,6 +15,7 @@
                             ...getChildComponentProps(childConfig),
                             activated: getIsActivated(childConfig),
                             topics_group_id,
+                            docmeta: docmeta,
                             isLoaded: isLoaded,
                         }"
                     />
@@ -51,6 +52,7 @@ export default {
     name: 'ContentsGroupingExtension',
     props: {
         smarty_lang: { type: String, required: false },
+        docmeta: { type: Object, required: false },
         request: { type: Object, required: false },
         extConfig: { type: Array, required: true },
         topics_group_id: { type: Number, required: true },
@@ -220,6 +222,7 @@ export default {
                 'Html',
                 'Date',
                 'Wysiwyg',
+                'Image',
             ];
             // Remove component from coreComponents when it is already loaded.
             coreComponents.forEach((component) => {
