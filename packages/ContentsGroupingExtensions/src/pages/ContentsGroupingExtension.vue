@@ -210,7 +210,7 @@ export default {
 
         try {
             await this.loadScript(prefixUrl + manifest['rcms-mng-vendors.js']);
-            const coreComponents = ['Text', 'Textarea', 'Link', 'RelationFld', 'Selectbox', 'Checkbox', 'Html'];
+            const coreComponents = ['Text', 'Textarea', 'Link', 'RelationFld', 'Selectbox', 'Checkbox', 'Html', 'Date'];
             // Remove component from coreComponents when it is already loaded.
             coreComponents.forEach((component) => {
                 if (window['common/components/extensions/Ext' + component]) {
