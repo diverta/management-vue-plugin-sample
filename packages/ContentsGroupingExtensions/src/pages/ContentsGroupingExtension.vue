@@ -61,7 +61,7 @@ export default {
         ChildFileManager: () => import(/* webpackChunkName: "ChildFileManager" */ '@/components/ChildFileManager.vue'),
         ChildText: () => import(/* webpackChunkName: "ChildText" */ '@/components/ChildText.vue'),
         ChildTextarea: () => import(/* webpackChunkName: "ChildTextarea" */ '@/components/ChildTextarea.vue'),
-        ChildWysiwyg: () => import(/* webpackChunkName: "ChildWysiwyg" */ '@/components/ChildWysiwyg/index.vue'),
+        ChildWysiwyg: () => import(/* webpackChunkName: "ChildWysiwyg" */ '@/components/ChildWysiwyg.vue'),
         ChildMultipleCheckbox: () =>
             import(/* webpackChunkName: "ChildMultipleCheckbox" */ '@/components/ChildMultipleCheckbox.vue'),
         ChildLink: () => import(/* webpackChunkName: "ChildLink" */ '@/components/ChildLink.vue'),
@@ -210,7 +210,17 @@ export default {
 
         try {
             await this.loadScript(prefixUrl + manifest['rcms-mng-vendors.js']);
-            const coreComponents = ['Text', 'Textarea', 'Link', 'RelationFld', 'Selectbox', 'Checkbox', 'Html', 'Date'];
+            const coreComponents = [
+                'Text',
+                'Textarea',
+                'Link',
+                'RelationFld',
+                'Selectbox',
+                'Checkbox',
+                'Html',
+                'Date',
+                'Wysiwyg',
+            ];
             // Remove component from coreComponents when it is already loaded.
             coreComponents.forEach((component) => {
                 if (window['common/components/extensions/Ext' + component]) {
