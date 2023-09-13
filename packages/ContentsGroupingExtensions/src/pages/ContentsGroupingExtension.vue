@@ -47,6 +47,7 @@ import { globalState } from '@/common/global-state';
 // This is needed because every loop of the same field will mount this component with different Vue instance
 // and we need to make sure that the script is loaded only once
 window.scriptLoadingTracker = window.scriptLoadingTracker || {};
+window.kurocoCoreManifestUrlForPlugin = window.kurocoCoreManifestUrlForPlugin || {};
 
 export default {
     name: 'ContentsGroupingExtension',
@@ -207,8 +208,15 @@ export default {
         const prefixUrl = '/management/js/rcms-vue/components/rcms-mng/';
 
         // load manifest.json to get each ext components' file name.
-        const kurocoCoreManifestUrl = prefixUrl + 'manifest.json?v=' + Date.now();
-        const manifest = await fetch(kurocoCoreManifestUrl).then((res) => res.json());
+        let manifest = window.kurocoCoreManifestUrlForPlugin;
+        if (Object.keys(manifest).length === 0) {
+            const now = new Date();
+            now.setSeconds(0, 0);
+            const timestampInMilliseconds = now.getTime();
+            const kurocoCoreManifestUrl = prefixUrl + 'manifest.json?v=' + timestampInMilliseconds;
+            manifest = await fetch(kurocoCoreManifestUrl).then((res) => res.json());
+            window.kurocoCoreManifestUrlForPlugin = manifest;
+        }
 
         try {
             await this.loadScript(prefixUrl + manifest['rcms-mng-vendors.js']);
