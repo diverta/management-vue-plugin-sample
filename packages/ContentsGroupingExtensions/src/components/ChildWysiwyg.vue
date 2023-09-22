@@ -11,7 +11,7 @@
                 v-if="flagToLoadOnce"
                 :name="$attrs.name"
                 :value="$attrs.value"
-                :opts="JSON.stringify($attrs.options)"
+                :opts="$attrs.options"
                 :upload_dir="$attrs.upload_dir"
                 :placeholders="$attrs.options.placeholders"
                 :use_font_size_px="$attrs.options.use_font_size_px ? $attrs.options.use_font_size_px : 0"
