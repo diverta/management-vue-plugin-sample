@@ -1,7 +1,7 @@
 module.exports = {
     name: 'ContentsGroupingExtension',
     path: 'dist',
-    publicPath: '/files/user/mng_vue_components',
+    publicPath: '/files/user/mng_vue_components/',
 
     devHost: process.env.RCMS_JS_DEV_HOST || '127.0.0.1',
     devPort: process.env.RCMS_JS_DEV_PORT || 26787,

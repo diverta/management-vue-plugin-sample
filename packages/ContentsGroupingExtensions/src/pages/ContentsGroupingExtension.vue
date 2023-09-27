@@ -32,7 +32,7 @@ import ParentDropdown from '@/components/ParentDropdown.vue';
 
 import Vue from 'vue';
 import RcmsI18n from '@/common/i18n/rcms-i18n.js';
-window.rcmsJS.vue.registerVM(Vue, rcms_js_config.publicPath); // eslint-disable-line
+window.rcmsJS.vue.registerVM(Vue, rcms_js_config.publicPath.slice(0, -1)); // eslint-disable-line
 
 Vue.use(RcmsI18n);
 import VueLocalStorage from 'vue-localstorage';
