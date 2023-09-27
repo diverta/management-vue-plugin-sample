@@ -15,7 +15,7 @@
                             ...getChildComponentProps(childConfig),
                             activated: getIsActivated(childConfig),
                             topics_group_id,
-                            docmeta: docmeta,
+                            is_primary: is_primary,
                             isLoaded: isLoaded,
                         }"
                     />
@@ -53,7 +53,7 @@ export default {
     name: 'ContentsGroupingExtension',
     props: {
         smarty_lang: { type: String, required: false },
-        docmeta: { type: Object, required: false },
+        is_primary: { type: Boolean, required: true },
         request: { type: Object, required: false },
         extConfig: { type: Array, required: true },
         topics_group_id: { type: Number, required: true },

@@ -10,8 +10,8 @@
             <ExtImage
                 v-if="flagToLoadOnce"
                 :name="$attrs.name"
-                :lang="docmeta.lang"
-                :is_primary="docmeta.is_primary"
+                :lang="siteLang"
+                :is_primary="is_primary"
                 :value="$attrs.value"
                 :file_url="
                     '/direct/topics/file_upload/width=' +
@@ -41,10 +41,11 @@
 /**
  * @todo: Check that script_data props
  */
+import { globalState } from '@/common/global-state';
 export default {
     props: {
         isLoaded: { type: Boolean, required: true },
-        docmeta: { type: Object, required: true },
+        is_primary: { type: Boolean, required: true },
         topics_group_id: { type: Number, required: true },
     },
     data() {
@@ -58,6 +59,9 @@ export default {
                 return {};
             }
             return this.$attrs.options;
+        },
+        siteLang() {
+            return globalState.siteLang;
         },
     },
     watch: {
