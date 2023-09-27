@@ -159,8 +159,13 @@ export default {
                 }
 
                 // If the script hasn't started loading, start the loading process
-                const script = document.createElement('script');
+                let script = document.createElement('script');
                 script.src = src;
+                if (src.endsWith('.css')) {
+                    script = document.createElement('link');
+                    script.rel = 'stylesheet';
+                    script.href = src;
+                }
 
                 // Initialize the script loading state and promise
                 let resolveLoading, rejectLoading;
@@ -240,8 +245,25 @@ export default {
                     coreComponents.splice(coreComponents.indexOf(component), 1);
                 }
             });
+
+            // CSS
             await Promise.all(
                 coreComponents.map((component) => {
+                    if (manifest['common/components/extensions/Ext' + component + '.css'] === undefined) {
+                        return Promise.resolve();
+                    }
+                    return this.loadScript(
+                        prefixUrl + manifest['common/components/extensions/Ext' + component + '.css']
+                    );
+                })
+            );
+
+            // JS
+            await Promise.all(
+                coreComponents.map((component) => {
+                    if (manifest['common/components/extensions/Ext' + component + '.js'] === undefined) {
+                        return Promise.resolve();
+                    }
                     return this.loadScript(
                         prefixUrl + manifest['common/components/extensions/Ext' + component + '.js']
                     );
