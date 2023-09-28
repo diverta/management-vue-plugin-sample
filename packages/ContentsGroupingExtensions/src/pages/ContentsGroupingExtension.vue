@@ -1,13 +1,19 @@
 <template>
     <td v-if="extConfig" class="js-expand" :class="distinguishClassName">
-        <dl>
+        <dl v-if="initialized">
             <ParentDropdown
                 v-bind="{
                     ...config.parent,
+                    extOptions,
                 }"
                 @change="(ids) => (selectedIDs = ids)"
             >
+                <div v-if="debug">selectedIDs: {{ selectedIDs.join(', ') }}</div>
                 <div v-for="childConfig in config.children" :key="childConfig.no">
+                    <pre v-if="debug">
+                        TITLE: {{ childConfig.title }}
+                        SHOWS: {{ getIsActivated(childConfig) }}
+                    </pre>
                     <!-- eslint-disable-next-line vue/require-component-is -->
                     <component
                         v-show="getIsActivated(childConfig)"
@@ -40,7 +46,8 @@ export default {
         request: { type: Object, required: false },
         extConfig: { type: Array, required: true },
         topics_group_id: { type: Number, required: true },
-        preserve_keys_option: { type: Boolean, default: false },
+        preserve_keys_endpoint: { type: String, default: null },
+        debug: { type: Boolean, default: false },
     },
     components: {
         ParentDropdown,
@@ -62,9 +69,11 @@ export default {
     data() {
         return {
             EXT_TYPE,
+            initialized: false,
             selectedIDs: [],
             // in order to determine what the index number the current component is (within iteratable extension), see `mounted()`.
             distinguishClassName: 'js__contents-grouping-extension',
+            extOptions: [],
         };
     },
     computed: {
@@ -114,8 +123,7 @@ export default {
         getExtConfigWithStoredValue(extConfig, iteratableSelfComponentIndex) {
             const name = extConfig.ext_col_nm;
             const value = extConfig.value;
-            const restoredValue =
-                this.request && this.request[name] ? this.request[name][iteratableSelfComponentIndex] : undefined;
+            const restoredValue = this.request?.[name]?.[iteratableSelfComponentIndex];
             return {
                 ...extConfig,
                 value: restoredValue || value,
@@ -127,27 +135,44 @@ export default {
         sortByExtOrderNumber(extA, extB) {
             return extB.ext_order_no - extA.ext_order_no;
         },
-        async getKeyValueMaster() {
-            const url = 'https://yabe.g.kuroco.app/rcms-api/4/master?csvtable_id=1'; // TODO どう指定？
-            const resp = await axios(url, {
-                method: 'GET',
-                headers: { Accept: 'application/json' },
-                withCredentials: true,
-            });
-            const table = (resp?.data?.list || [])
-                ?.filter((d, idx) => idx !== 0)
-                ?.map(([k, v]) => ({
-                    [k]: v,
+        async convertToExtOptions(ext_option = '', preserve_keys_endpoint = '') {
+            const extOptions = ext_option
+                .split('\n')
+                .filter((v) => v)
+                .map((opt) => opt.split('::'))
+                .filter(([keyDef, label]) => keyDef && label)
+                .map(([key, label]) => ({
+                    key,
+                    value: key.replace(/\d+-/, ''),
+                    label,
                 }));
-            console.log('getKeyValueMaster', table);
+
+            if (!preserve_keys_endpoint) {
+                return extOptions;
+            }
+
+            const resp =
+                this.preserve_keys_endpoint &&
+                (await axios(preserve_keys_endpoint, {
+                    method: 'GET',
+                    headers: { Accept: 'application/json' },
+                    withCredentials: true,
+                }));
+            const keyMapMasterList = resp?.data?.list || [];
+            keyMapMasterList
+                ?.filter((d, idx) => idx !== 0) // remove column title row
+                ?.forEach(([k, v]) => {
+                    extOptions.find((opt) => {
+                        if (opt.key === k.replace(/::.*/, '')) opt.value = v;
+                    });
+                });
+            return extOptions;
         },
     },
     async created() {
         this.extConfig.sort(this.sortByExtOrderNumber);
-        // TODO どう指定？
-        if (this.preserve_keys_option) {
-            await this.getKeyValueMaster();
-        }
+        this.extOptions = await this.convertToExtOptions(this.config.parent.ext_option, this.preserve_keys_endpoint);
+        this.initialized = true;
     },
     mounted() {
         // since multiple custom components do not have its index number, gets it from CSS picking.
