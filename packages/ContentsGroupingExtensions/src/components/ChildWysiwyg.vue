@@ -7,12 +7,19 @@
             :data-ext_type="$attrs.ext_type"
             :data-default_value="$attrs.default_value"
         >
-            <ExtCheckbox
+            <ExtWysiwyg
                 v-if="flagToLoadOnce"
                 :name="$attrs.name"
-                :value="values"
-                :item="$attrs"
-                :TOPICS_MULTISELECT_BORDER_CHECKBOX="50"
+                :value="$attrs.value"
+                :opts="$attrs.options"
+                :upload_dir="$attrs.upload_dir"
+                :placeholders="$attrs.options.placeholders"
+                :use_font_size_px="$attrs.options.use_font_size_px ? $attrs.options.use_font_size_px : 0"
+                :resource_path="$attrs.options.resource"
+                :ext_help_msg="$attrs.ext_help_msg"
+                :delay="0"
+                ckfinder="/management/wysiwyg"
+                script_path="/management/wysiwyg/ckfinder/3.5.1/ckfinder.js"
             />
         </dd>
     </div>
@@ -28,17 +35,12 @@ export default {
             flagToLoadOnce: false,
         };
     },
-    computed: {
-        values() {
-            return this.$attrs.value.map((item) => item.key);
-        },
-    },
     watch: {
         isLoaded: {
             immediate: true,
             handler(newVal) {
                 if (newVal && !this.flagToLoadOnce) {
-                    this.$options.components.ExtCheckbox = window['common/components/extensions/ExtCheckbox'];
+                    this.$options.components.ExtWysiwyg = window['common/components/extensions/ExtWysiwyg'];
                     this.flagToLoadOnce = true;
                 }
             },

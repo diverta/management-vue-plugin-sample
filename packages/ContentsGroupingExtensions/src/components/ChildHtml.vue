@@ -7,7 +7,19 @@
             :data-ext_type="$attrs.ext_type"
             :data-default_value="$attrs.default_value"
         >
-            <ExtText v-if="flagToLoadOnce" :name="$attrs.name" :value="$attrs.value" />
+            <ExtHtml
+                v-if="flagToLoadOnce"
+                :name="$attrs.name"
+                :value="$attrs.value"
+                :language="'html'"
+                :source_id="`code-source--` + $attrs.name"
+                id=""
+                :simplified="true"
+                :width="$attrs.options.width ? $attrs.options.width : '800px'"
+                :height="$attrs.options.height ? $attrs.options.height : '450px'"
+                :dont_use_editor="!!$attrs.options.dont_use_editor"
+                :ext_help_msg="$attrs.ext_help_msg"
+            />
         </dd>
     </div>
 </template>
@@ -27,7 +39,7 @@ export default {
             immediate: true,
             handler(newVal) {
                 if (newVal && !this.flagToLoadOnce) {
-                    this.$options.components.ExtText = window['common/components/extensions/ExtText'];
+                    this.$options.components.ExtHtml = window['common/components/extensions/ExtHtml'];
                     this.flagToLoadOnce = true;
                 }
             },

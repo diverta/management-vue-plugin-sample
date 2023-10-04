@@ -1,5 +1,5 @@
 <template>
-    <td v-if="extConfig" class="js-expand" :class="distinguishClassName">
+    <td v-if="extConfig && isLoaded" class="js-expand" :class="distinguishClassName">
         <dl>
             <ParentDropdown
                 v-bind="{
@@ -15,6 +15,8 @@
                             ...getChildComponentProps(childConfig),
                             activated: getIsActivated(childConfig),
                             topics_group_id,
+                            is_primary: is_primary,
+                            isLoaded: isLoaded,
                         }"
                     />
                 </div>
@@ -29,13 +31,29 @@
 import ParentDropdown from '@/components/ParentDropdown.vue';
 
 import Vue from 'vue';
-window.rcmsJS.vue.registerVM(Vue, rcms_js_config.publicPath); // eslint-disable-line
+import RcmsI18n from '@/common/i18n/rcms-i18n.js';
+window.rcmsJS.vue.registerVM(Vue, rcms_js_config.publicPath.slice(0, -1)); // eslint-disable-line
+
+Vue.use(RcmsI18n);
+import VueLocalStorage from 'vue-localstorage';
+Vue.use(VueLocalStorage);
+
+import store from '@/store';
 
 import { EXT_TYPE, getExtTypeByValue } from '@/common/const.js';
+import { globalState } from '@/common/global-state';
+
+// Global object to track loaded and loading scripts
+// This is needed because every loop of the same field will mount this component with different Vue instance
+// and we need to make sure that the script is loaded only once
+window.scriptLoadingTracker = window.scriptLoadingTracker || {};
+window.kurocoCoreManifestUrlForPlugin = window.kurocoCoreManifestUrlForPlugin || {};
 
 export default {
     name: 'ContentsGroupingExtension',
     props: {
+        smarty_lang: { type: String, required: false },
+        is_primary: { type: Boolean, required: true },
         request: { type: Object, required: false },
         extConfig: { type: Array, required: true },
         topics_group_id: { type: Number, required: true },
@@ -46,15 +64,15 @@ export default {
         ChildFileManager: () => import(/* webpackChunkName: "ChildFileManager" */ '@/components/ChildFileManager.vue'),
         ChildText: () => import(/* webpackChunkName: "ChildText" */ '@/components/ChildText.vue'),
         ChildTextarea: () => import(/* webpackChunkName: "ChildTextarea" */ '@/components/ChildTextarea.vue'),
-        ChildWysiwyg: () => import(/* webpackChunkName: "ChildWysiwyg" */ '@/components/ChildWysiwyg/index.vue'),
+        ChildWysiwyg: () => import(/* webpackChunkName: "ChildWysiwyg" */ '@/components/ChildWysiwyg.vue'),
         ChildMultipleCheckbox: () =>
             import(/* webpackChunkName: "ChildMultipleCheckbox" */ '@/components/ChildMultipleCheckbox.vue'),
         ChildLink: () => import(/* webpackChunkName: "ChildLink" */ '@/components/ChildLink.vue'),
         ChildSelectbox: () => import(/* webpackChunkName: "ChildSelectbox" */ '@/components/ChildSelectbox.vue'),
         ChildMap: () => import(/* webpackChunkName: "ChildMap" */ '@/components/ChildMap.vue'),
         ChildRelationField: () =>
-            import(/* webpackChunkName: "ChildRelationField" */ '@/components/ChildRelationField/index.vue'),
-        ChildHtml: () => import(/* webpackChunkName: "ChildHtml" */ '@/components/ChildHtml/index.vue'),
+            import(/* webpackChunkName: "ChildRelationField" */ '@/components/ChildRelationField.vue'),
+        ChildHtml: () => import(/* webpackChunkName: "ChildHtml" */ '@/components/ChildHtml.vue'),
         ChildDate: () => import(/* webpackChunkName: "ChildDate" */ '@/components/ChildDate.vue'),
     },
     data() {
@@ -63,6 +81,7 @@ export default {
             selectedIDs: [],
             // in order to determine what the index number the current component is (within iteratable extension), see `mounted()`.
             distinguishClassName: 'js__contents-grouping-extension',
+            isLoaded: false,
         };
     },
     computed: {
@@ -125,17 +144,136 @@ export default {
         sortByExtOrderNumber(extA, extB) {
             return extB.ext_order_no - extA.ext_order_no;
         },
+        loadScript(src) {
+            return new Promise((resolve, reject) => {
+                // If the script is already loaded, resolve immediately
+                if (window.scriptLoadingTracker[src]?.status === 'loaded') {
+                    resolve();
+                    return;
+                }
+
+                // If the script is being loaded, wait for it to complete
+                if (window.scriptLoadingTracker[src]?.status === 'loading') {
+                    window.scriptLoadingTracker[src].promise.then(resolve, reject);
+                    return;
+                }
+
+                // If the script hasn't started loading, start the loading process
+                let script = document.createElement('script');
+                script.src = src;
+                if (src.endsWith('.css')) {
+                    script = document.createElement('link');
+                    script.rel = 'stylesheet';
+                    script.href = src;
+                }
+
+                // Initialize the script loading state and promise
+                let resolveLoading, rejectLoading;
+                const loadingPromise = new Promise((res, rej) => {
+                    resolveLoading = res;
+                    rejectLoading = rej;
+                });
+
+                window.scriptLoadingTracker[src] = {
+                    status: 'loading',
+                    promise: loadingPromise,
+                };
+
+                script.onload = () => {
+                    // Mark the script as loaded and resolve the promise
+                    window.scriptLoadingTracker[src].status = 'loaded';
+                    resolveLoading();
+                    resolve();
+                };
+
+                script.onerror = () => {
+                    // Mark the script as failed and reject the promise
+                    window.scriptLoadingTracker[src].status = 'failed';
+                    rejectLoading();
+                    reject();
+                };
+
+                document.body.appendChild(script);
+            });
+        },
     },
     created() {
         this.extConfig.sort(this.sortByExtOrderNumber);
+        globalState.siteLang = this.smarty_lang;
+        this.$store = store;
     },
-    mounted() {
+    async mounted() {
         // since multiple custom components do not have its index number, gets it from CSS picking.
         const iteratableSelfComponentIndex =
             window.document.querySelectorAll(`.${this.distinguishClassName}`).length - 1;
         this.extConfig = this.extConfig.map((extConfig) =>
             this.getExtConfigWithStoredValue(extConfig, iteratableSelfComponentIndex)
         );
+
+        const prefixUrl = '/management/js/rcms-vue/components/rcms-mng/';
+
+        // load manifest.json to get each ext components' file name.
+        let manifest = window.kurocoCoreManifestUrlForPlugin;
+        if (Object.keys(manifest).length === 0) {
+            const now = new Date();
+            now.setSeconds(0, 0);
+            const timestampInMilliseconds = now.getTime();
+            const kurocoCoreManifestUrl = prefixUrl + 'manifest.json?v=' + timestampInMilliseconds;
+            manifest = await fetch(kurocoCoreManifestUrl).then((res) => res.json());
+            window.kurocoCoreManifestUrlForPlugin = manifest;
+        }
+
+        try {
+            await this.loadScript(prefixUrl + manifest['rcms-mng-vendors.js']);
+            const coreComponents = [
+                'Text',
+                'Textarea',
+                'Link',
+                'RelationFld',
+                'Selectbox',
+                'Checkbox',
+                'Html',
+                'Date',
+                'Wysiwyg',
+                'Image',
+                'FileManager',
+                'Location',
+            ];
+            // Remove component from coreComponents when it is already loaded.
+            coreComponents.forEach((component) => {
+                if (window['common/components/extensions/Ext' + component]) {
+                    coreComponents.splice(coreComponents.indexOf(component), 1);
+                }
+            });
+
+            // CSS
+            await Promise.all(
+                coreComponents.map((component) => {
+                    if (manifest['common/components/extensions/Ext' + component + '.css'] === undefined) {
+                        return Promise.resolve();
+                    }
+                    return this.loadScript(
+                        prefixUrl + manifest['common/components/extensions/Ext' + component + '.css']
+                    );
+                })
+            );
+
+            // JS
+            await Promise.all(
+                coreComponents.map((component) => {
+                    if (manifest['common/components/extensions/Ext' + component + '.js'] === undefined) {
+                        return Promise.resolve();
+                    }
+                    return this.loadScript(
+                        prefixUrl + manifest['common/components/extensions/Ext' + component + '.js']
+                    );
+                })
+            );
+
+            this.isLoaded = true;
+        } catch (error) {
+            console.error(`Failed to load script: ${error}`);
+        }
     },
 };
 </script>

@@ -7,43 +7,31 @@
             :data-ext_type="$attrs.ext_type"
             :data-default_value="$attrs.default_value"
         >
-            <select :name="$attrs.name" v-model="selected" ref="select">
-                <option v-if="!required" value="">選択なし</option>
-                <option
-                    v-for="[value, key] in Object.entries($attrs.options || {})"
-                    :key="key"
-                    :label="key"
-                    :data-key="key"
-                    :value="value"
-                >
-                    {{ key }}
-                </option>
-            </select>
+            <ExtSelectbox v-if="flagToLoadOnce" :name="$attrs.name" :value="$attrs.value" :item="$attrs" />
         </dd>
     </div>
 </template>
 
 <script>
 export default {
+    props: {
+        isLoaded: { type: Boolean, required: true },
+    },
     data() {
         return {
-            selected: null,
+            flagToLoadOnce: false,
         };
     },
-    computed: {
-        required() {
-            return this.$attrs.limits && this.$attrs.limits.required !== undefined;
+    watch: {
+        isLoaded: {
+            immediate: true,
+            handler(newVal) {
+                if (newVal && !this.flagToLoadOnce) {
+                    this.$options.components.ExtSelectbox = window['common/components/extensions/ExtSelectbox'];
+                    this.flagToLoadOnce = true;
+                }
+            },
         },
-    },
-    mounted() {
-        const defaultValue = this.$attrs.default_value || this.$attrs.value;
-        if (defaultValue !== undefined) {
-            this.selected = defaultValue;
-            return;
-        }
-        this.$nextTick(() => {
-            this.$refs.select.getElementsByTagName('option')[0].selected = 'selected';
-        });
     },
 };
 </script>

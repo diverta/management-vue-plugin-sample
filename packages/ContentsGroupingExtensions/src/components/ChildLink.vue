@@ -7,35 +7,30 @@
             :data-ext_type="$attrs.ext_type"
             :data-default_value="$attrs.default_value"
         >
-            <dl>
-                <dt>url:</dt>
-                <dd>
-                    <input
-                        type="text"
-                        :name="`${$attrs.name}[url]`"
-                        :value="$attrs.value ? $attrs.value.url : undefined"
-                        size="60"
-                    />
-                </dd>
-                <dt>title:</dt>
-                <dd>
-                    <input
-                        type="text"
-                        :name="`${$attrs.name}[title]`"
-                        :value="$attrs.value ? $attrs.value.title : undefined"
-                        size="60"
-                    />
-                </dd>
-            </dl>
+            <ExtLink v-if="flagToLoadOnce" :name="$attrs.name" :value="$attrs.value" :item="$attrs" />
         </dd>
     </div>
 </template>
 
 <script>
 export default {
-    methods: {
-        getIsChecked(key) {
-            return Object.entries(this.$attrs.value).find(([_key]) => `${_key}` === `${key}`);
+    props: {
+        isLoaded: { type: Boolean, required: true },
+    },
+    data() {
+        return {
+            flagToLoadOnce: false,
+        };
+    },
+    watch: {
+        isLoaded: {
+            immediate: true,
+            handler(newVal) {
+                if (newVal && !this.flagToLoadOnce) {
+                    this.$options.components.ExtLink = window['common/components/extensions/ExtLink'];
+                    this.flagToLoadOnce = true;
+                }
+            },
         },
     },
 };
