@@ -19,7 +19,8 @@
     "build-storybook": "build-storybook"
   },
   "dependencies": {
-    "vue": "^2.6.6"
+    "vue": "^2.6.6",
+    "vuex": "^3.x"
   },
   "devDependencies": {
     "@babel/cli": "^7.16.8",

@@ -7,7 +7,13 @@
             :data-ext_type="$attrs.ext_type"
             :data-default_value="$attrs.default_value"
         >
-            <select :name="$attrs.name" @change="emitChildrenIDs" ref="select" v-model="selected">
+            <select
+                :name="$attrs.name"
+                @change="emitChildrenIDs"
+                ref="select"
+                v-model="selected"
+                class="form-control w-auto"
+            >
                 <option v-if="!required" value="" selected>選択なし</option>
                 <option
                     v-for="({ key, value, label }, idx) in extOptions"
