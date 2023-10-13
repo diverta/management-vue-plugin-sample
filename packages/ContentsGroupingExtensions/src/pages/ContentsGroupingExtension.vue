@@ -47,7 +47,8 @@ import { globalState } from '@/common/global-state';
 // This is needed because every loop of the same field will mount this component with different Vue instance
 // and we need to make sure that the script is loaded only once
 window.scriptLoadingTracker = window.scriptLoadingTracker || {};
-window.kurocoCoreManifestUrlForPlugin = window.kurocoCoreManifestUrlForPlugin || {};
+// Same as above, but for kuroco core manifest
+window.kurocoCoreManifestLoadingTracker = window.kurocoCoreManifestLoadingTracker || {};
 
 export default {
     name: 'ContentsGroupingExtension',
@@ -212,16 +213,34 @@ export default {
 
         const prefixUrl = '/management/js/rcms-vue/components/rcms-mng/';
 
-        // load manifest.json to get each ext components' file name.
-        let manifest = window.kurocoCoreManifestUrlForPlugin;
-        if (Object.keys(manifest).length === 0) {
-            const now = new Date();
-            now.setSeconds(0, 0);
-            const timestampInMilliseconds = now.getTime();
-            const kurocoCoreManifestUrl = prefixUrl + 'manifest.json?v=' + timestampInMilliseconds;
-            manifest = await fetch(kurocoCoreManifestUrl).then((res) => res.json());
-            window.kurocoCoreManifestUrlForPlugin = manifest;
-        }
+        const loadManifest = async () => {
+            const kurocoCoreManifestUrl = prefixUrl + 'manifest.json';
+            return fetch(kurocoCoreManifestUrl).then((response) => response.json());
+        };
+
+        const getManifest = async () => {
+            if (window.kurocoCoreManifestUrlForPlugin?.status === 'loaded') {
+                return window.kurocoCoreManifestUrlForPlugin.manifest;
+            }
+
+            if (window.kurocoCoreManifestUrlForPlugin?.status === 'loading') {
+                return window.kurocoCoreManifestUrlForPlugin.promise;
+            }
+
+            const manifestPromise = loadManifest();
+            window.kurocoCoreManifestUrlForPlugin = {
+                status: 'loading',
+                promise: manifestPromise,
+            };
+            const manifest = await manifestPromise;
+            window.kurocoCoreManifestUrlForPlugin = {
+                status: 'loaded',
+                manifest,
+            };
+            return manifest;
+        };
+
+        const manifest = await getManifest();
 
         try {
             await this.loadScript(prefixUrl + manifest['rcms-mng-vendors.js']);
