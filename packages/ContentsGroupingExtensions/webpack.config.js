@@ -6,15 +6,11 @@ const TerserPlugin = require('terser-webpack-plugin');
 const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { VueLoaderPlugin } = require('vue-loader');
-const MonacoEditorPlugin = require('monaco-editor-webpack-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const ESLintPlugin = require('eslint-webpack-plugin');
 
 // eslint-disable-next-line no-unused-vars
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-
-const CKEditorWebpackPlugin = require('@ckeditor/ckeditor5-dev-webpack-plugin');
-const { styles } = require('@ckeditor/ckeditor5-dev-utils');
 
 const config = require('./rcms-js.config.js');
 const pages = require('./pages.config.js');
@@ -45,10 +41,6 @@ module.exports = {
                 type: 'asset/source',
             },
             {
-                test: /ckeditor5-[^/\\]+[/\\]theme[/\\]icons[/\\][^/\\]+\.svg$/,
-                type: 'asset/source',
-            },
-            {
                 test: /\.(png|jpe?g|gif|svg|woff2?|eot|ttf|otf)$/,
                 type: 'asset',
                 parser: {
@@ -59,33 +51,6 @@ module.exports = {
                 generator: {
                     filename: '[name].[hash].[ext]'
                 },
-                exclude: [
-                    /ckeditor5-[^/\\]+[/\\]theme[/\\]icons[/\\][^/\\]+\.svg$/,
-                    /src\/components\/ChildWysiwyg\/icons\//,
-                ],
-            },
-            {
-                test: /ckeditor5-[^/\\]+[/\\]theme[/\\].+\.css$/,
-                use: [
-                    {
-                        loader: 'style-loader',
-                        options: {
-                            injectType: 'singletonStyleTag',
-                            attributes: {
-                                'data-cke': true,
-                            },
-                        },
-                    },
-                    {
-                        loader: 'postcss-loader',
-                        options: styles.getPostCssConfig({
-                            themeImporter: {
-                                themePath: require.resolve('@ckeditor/ckeditor5-theme-lark'),
-                            },
-                            minify: true,
-                        }),
-                    },
-                ],
             },
             {
                 test: /\.vue$/,
@@ -112,13 +77,6 @@ module.exports = {
         new WebpackManifestPlugin({ publicPath: '' }),
         new MiniCssExtractPlugin({
             filename: serve ? '[name].[hash].css' : '[name].[contenthash].css',
-        }),
-        new CKEditorWebpackPlugin({
-            language: 'ja',
-            addMainLanguageTranslationsToAllAssets: true,
-        }),
-        new MonacoEditorPlugin({
-            languages: ['css', 'html', 'javascript', 'typescript'],
         }),
         new ESLintPlugin({
             extensions: ['js', 'vue'],
