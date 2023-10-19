@@ -5,9 +5,14 @@
                 v-bind="{
                     ...config.parent,
                 }"
+                :class="`ext_item_${config.parent.ext_index}`"
                 @change="(ids) => (selectedIDs = ids)"
             >
-                <div v-for="childConfig in config.children" :key="childConfig.no">
+                <div
+                    v-for="childConfig in config.children"
+                    :key="childConfig.no"
+                    :class="`ext_item_${childConfig.ext_index}`"
+                >
                     <!-- eslint-disable-next-line vue/require-component-is -->
                     <component
                         v-show="getIsActivated(childConfig)"
