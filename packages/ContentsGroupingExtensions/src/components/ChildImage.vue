@@ -13,7 +13,7 @@
                 :lang="siteLang"
                 :is_primary="is_primary"
                 :value="$attrs.value"
-                :file_url="
+                :uploader_url="
                     '/direct/topics/file_upload/width=' +
                     $attrs.options.width +
                     '%26height=' +

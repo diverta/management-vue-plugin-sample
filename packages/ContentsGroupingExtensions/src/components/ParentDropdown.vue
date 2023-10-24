@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div ref="root">
         <dt>{{ $attrs.ext_title }}</dt>
         <dd
             class="multi_dd"
@@ -40,6 +40,7 @@ export default {
     data() {
         return {
             selected: '',
+            observer: null,
         };
     },
     computed: {
@@ -68,6 +69,21 @@ export default {
                 this.emitChildrenIDs();
             }
         });
+
+        // In case of add -> delete -> add this repeatable extension,
+        // child extensions will be still shown (and retains it's value) despite of parent extension is non-selected.
+        // To fix this, observe the parent extension's visibility and reset the value of child extensions.
+        this.observer = new ResizeObserver((entries = []) => {
+            const invisible = entries.some((entry) => {
+                const { height, width } = entry.contentRect;
+                return height === 0 && width === 0;
+            });
+            invisible && this.$emit('change', []); // reset value
+        });
+        this.observer.observe(this.$refs.root);
+    },
+    beforeDestroy() {
+        this.observer?.disconnect?.();
     },
 };
 </script>
