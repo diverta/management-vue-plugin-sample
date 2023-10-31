@@ -18,6 +18,7 @@
                 :resource_path="$attrs.options.resource"
                 :ext_help_msg="$attrs.ext_help_msg"
                 :delay="0"
+                :lang="siteLang"
                 ckfinder="/management/wysiwyg"
                 script_path="/management/wysiwyg/ckfinder/3.5.1/ckfinder.js"
             />
@@ -26,6 +27,7 @@
 </template>
 
 <script>
+import { globalState } from '@/common/global-state';
 export default {
     props: {
         isLoaded: { type: Boolean, required: true },
@@ -34,6 +36,11 @@ export default {
         return {
             flagToLoadOnce: false,
         };
+    },
+    computed: {
+        siteLang() {
+            return globalState.siteLang;
+        },
     },
     watch: {
         isLoaded: {
