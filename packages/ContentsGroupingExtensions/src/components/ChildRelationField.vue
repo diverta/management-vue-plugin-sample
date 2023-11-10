@@ -17,7 +17,7 @@
                         table_id: $attrs.options.module,
                         allowed_id: $attrs.options.group_id,
                         limit: $attrs.options.limit,
-                        _name: $attrs.name,
+                        name: $attrs.name,
                         disp_group_no: $attrs.disp_group_no,
                         ext_options: $attrs.options,
                         ext_help_msg: $attrs.ext_help_msg,
