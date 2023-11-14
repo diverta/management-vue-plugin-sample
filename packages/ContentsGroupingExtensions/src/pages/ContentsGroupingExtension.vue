@@ -4,6 +4,7 @@
             <ParentDropdown
                 v-bind="{
                     ...config.parent,
+                    extOptions,
                 }"
                 :class="`ext_item_${config.parent.ext_index}`"
                 @change="(ids) => (selectedIDs = ids)"
@@ -32,6 +33,8 @@
 
 <script>
 /* eslint-disable vue/no-unused-components */
+import Axios from 'axios';
+import { setupCache } from 'axios-cache-interceptor';
 
 import ParentDropdown from '@/components/ParentDropdown.vue';
 
@@ -55,6 +58,8 @@ window.scriptLoadingTracker = window.scriptLoadingTracker || {};
 // Same as above, but for kuroco core manifest
 window.kurocoCoreManifestLoadingTracker = window.kurocoCoreManifestLoadingTracker || {};
 
+const axios = setupCache(Axios);
+
 export default {
     name: 'ContentsGroupingExtension',
     props: {
@@ -63,6 +68,8 @@ export default {
         request: { type: Object, required: false },
         extConfig: { type: Array, required: true },
         topics_group_id: { type: Number, required: true },
+        preserve_keys_endpoint: { type: String, default: null },
+        debug: { type: Boolean, default: false },
     },
     components: {
         ParentDropdown,
@@ -87,6 +94,7 @@ export default {
             selectedIDs: [],
             // in order to determine what the index number the current component is (within iteratable extension), see `mounted()`.
             distinguishClassName: 'js__contents-grouping-extension',
+            extOptions: [],
             isLoaded: false,
         };
     },
@@ -137,8 +145,7 @@ export default {
         getExtConfigWithStoredValue(extConfig, iteratableSelfComponentIndex) {
             const name = extConfig.ext_col_nm;
             const value = extConfig.value;
-            const restoredValue =
-                this.request && this.request[name] ? this.request[name][iteratableSelfComponentIndex] : undefined;
+            const restoredValue = this.request?.[name]?.[iteratableSelfComponentIndex];
             return {
                 ...extConfig,
                 value: restoredValue || value,
@@ -149,6 +156,39 @@ export default {
         },
         sortByExtOrderNumber(extA, extB) {
             return extB.ext_order_no - extA.ext_order_no;
+        },
+        async convertToExtOptions(ext_option = '', preserve_keys_endpoint = '') {
+            const extOptions = ext_option
+                .split('\n')
+                .filter((v) => v)
+                .map((opt) => opt.split('::'))
+                .filter(([keyDef, label]) => keyDef && label)
+                .map(([key, label]) => ({
+                    key,
+                    value: key.replace(/\d+-/, ''),
+                    label,
+                }));
+
+            if (!preserve_keys_endpoint) {
+                return extOptions;
+            }
+
+            const resp =
+                this.preserve_keys_endpoint &&
+                (await axios(preserve_keys_endpoint, {
+                    method: 'GET',
+                    headers: { Accept: 'application/json' },
+                    withCredentials: true,
+                }));
+            const keyMapMasterList = resp?.data?.list || [];
+            keyMapMasterList
+                ?.filter((d, idx) => idx !== 0) // remove column title row
+                ?.forEach(([k, v]) => {
+                    extOptions.find((opt) => {
+                        if (opt.key === k.replace(/::.*/, '')) opt.value = v;
+                    });
+                });
+            return extOptions;
         },
         loadScript(src) {
             return new Promise((resolve, reject) => {
@@ -203,8 +243,9 @@ export default {
             });
         },
     },
-    created() {
+    async created() {
         this.extConfig.sort(this.sortByExtOrderNumber);
+        this.extOptions = await this.convertToExtOptions(this.config.parent.ext_option, this.preserve_keys_endpoint);
         globalState.siteLang = this.smarty_lang;
         this.$store = store;
     },

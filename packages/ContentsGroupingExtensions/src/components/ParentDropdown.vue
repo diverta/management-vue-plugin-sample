@@ -9,18 +9,19 @@
         >
             <select
                 :name="$attrs.name"
-                @change="handleOnChange"
+                @change="emitChildrenIDs"
                 ref="select"
                 v-model="selected"
                 class="form-control w-auto"
             >
                 <option v-if="!required" value="" selected>選択なし</option>
                 <option
-                    v-for="({ keyDef, label }, idx) in sortedOptions"
-                    :key="`${keyDef}_${idx}`"
+                    v-for="({ key, value, label }, idx) in extOptions"
+                    :key="`${key}_${idx}`"
                     :label="label"
-                    :data-key="`${keyDef}_${idx}`"
-                    :value="keyDef"
+                    :data-key="`${key}_${idx}`"
+                    :value="key"
+                    :data-value="value"
                 >
                     {{ label }}
                 </option>
@@ -34,7 +35,7 @@
 <script>
 export default {
     props: {
-        ext_option: { type: String, required: true },
+        extOptions: { type: Array, default: () => [] },
     },
     data() {
         return {
@@ -43,31 +44,29 @@ export default {
         };
     },
     computed: {
-        sortedOptions() {
-            return this.ext_option
-                .split('\n')
-                .filter((v) => v)
-                .map((opt) => opt.split('::'))
-                .filter(([keyDef, label]) => keyDef && label)
-                .map(([keyDef, label]) => ({ keyDef, label }));
-        },
         required() {
             return this.$attrs.limits && this.$attrs.limits.required !== undefined;
         },
     },
     methods: {
-        handleOnChange(e) {
-            this.$emit('change', this.toArrayIDs(e.target.value));
+        emitChildrenIDs() {
+            const d = this.$refs?.select?.selectedOptions?.[0]?.dataset?.value?.split(',') || [];
+            this.$emit('change', d);
         },
-        toArrayIDs(idsStr) {
-            return idsStr.replace(/^\d+-/gi, '').split(',');
+        getSelectedValue() {
+            const selected = this.$attrs.default_value || this.$attrs.value || '';
+            // 前回未選択である場合はそのまま返す
+            if (selected === '') {
+                return selected;
+            }
+            return this.extOptions?.find(({ key }) => key === selected)?.key || '';
         },
     },
     mounted() {
-        this.selected = this.$attrs.default_value || this.$attrs.value || '';
+        this.selected = this.getSelectedValue();
         this.$nextTick(() => {
-            if (this.$refs.select.value !== '') {
-                this.$emit('change', this.toArrayIDs(this.$refs.select.value));
+            if (this.selected) {
+                this.emitChildrenIDs();
             }
         });
 
