@@ -33,7 +33,8 @@
 
 <script>
 /* eslint-disable vue/no-unused-components */
-import axios from 'axios';
+import Axios from 'axios';
+import { setupCache } from 'axios-cache-interceptor';
 
 import ParentDropdown from '@/components/ParentDropdown.vue';
 
@@ -56,6 +57,8 @@ import { globalState } from '@/common/global-state';
 window.scriptLoadingTracker = window.scriptLoadingTracker || {};
 // Same as above, but for kuroco core manifest
 window.kurocoCoreManifestLoadingTracker = window.kurocoCoreManifestLoadingTracker || {};
+
+const axios = setupCache(Axios);
 
 export default {
     name: 'ContentsGroupingExtension',
