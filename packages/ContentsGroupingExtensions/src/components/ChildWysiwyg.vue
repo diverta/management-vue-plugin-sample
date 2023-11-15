@@ -28,30 +28,18 @@
 
 <script>
 import { globalState } from '@/common/global-state';
+import BaseMixin from './baseMixin.js';
 export default {
-    props: {
-        isLoaded: { type: Boolean, required: true },
-    },
-    data() {
-        return {
-            flagToLoadOnce: false,
-        };
-    },
+    mixins: [BaseMixin],
     computed: {
         siteLang() {
             return globalState.siteLang;
         },
     },
-    watch: {
-        isLoaded: {
-            immediate: true,
-            handler(newVal) {
-                if (newVal && !this.flagToLoadOnce) {
-                    this.$options.components.ExtWysiwyg = window['common/components/extensions/ExtWysiwyg'];
-                    this.flagToLoadOnce = true;
-                }
-            },
-        },
+    data() {
+        return {
+            extComponentName: 'ExtWysiwyg',
+        };
     },
 };
 </script>

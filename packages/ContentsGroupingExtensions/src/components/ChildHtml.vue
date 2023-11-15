@@ -25,25 +25,13 @@
 </template>
 
 <script>
+import BaseMixin from './baseMixin.js';
 export default {
-    props: {
-        isLoaded: { type: Boolean, required: true },
-    },
+    mixins: [BaseMixin],
     data() {
         return {
-            flagToLoadOnce: false,
+            extComponentName: 'ExtHtml',
         };
-    },
-    watch: {
-        isLoaded: {
-            immediate: true,
-            handler(newVal) {
-                if (newVal && !this.flagToLoadOnce) {
-                    this.$options.components.ExtHtml = window['common/components/extensions/ExtHtml'];
-                    this.flagToLoadOnce = true;
-                }
-            },
-        },
     },
 };
 </script>

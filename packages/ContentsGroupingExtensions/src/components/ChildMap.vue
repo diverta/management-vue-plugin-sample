@@ -13,29 +13,13 @@
 </template>
 
 <script>
-/**
- * README:
- *      Please change ckfinder_path domain to your own Kuroco admin domain.
- */
+import BaseMixin from './baseMixin.js';
 export default {
-    props: {
-        isLoaded: { type: Boolean, required: true },
-    },
+    mixins: [BaseMixin],
     data() {
         return {
-            flagToLoadOnce: false,
+            extComponentName: 'ExtLocation',
         };
-    },
-    watch: {
-        isLoaded: {
-            immediate: true,
-            handler(newVal) {
-                if (newVal && !this.flagToLoadOnce) {
-                    this.$options.components.ExtLocation = window['common/components/extensions/ExtLocation'];
-                    this.flagToLoadOnce = true;
-                }
-            },
-        },
     },
 };
 </script>

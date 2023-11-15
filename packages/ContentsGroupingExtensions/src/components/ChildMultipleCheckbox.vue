@@ -19,29 +19,17 @@
 </template>
 
 <script>
+import BaseMixin from './baseMixin.js';
 export default {
-    props: {
-        isLoaded: { type: Boolean, required: true },
-    },
+    mixins: [BaseMixin],
     data() {
         return {
-            flagToLoadOnce: false,
+            extComponentName: 'ExtCheckbox',
         };
     },
     computed: {
         values() {
             return this.$attrs.value.map((item) => item.key);
-        },
-    },
-    watch: {
-        isLoaded: {
-            immediate: true,
-            handler(newVal) {
-                if (newVal && !this.flagToLoadOnce) {
-                    this.$options.components.ExtCheckbox = window['common/components/extensions/ExtCheckbox'];
-                    this.flagToLoadOnce = true;
-                }
-            },
         },
     },
 };
