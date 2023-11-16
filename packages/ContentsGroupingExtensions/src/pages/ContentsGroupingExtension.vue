@@ -1,5 +1,5 @@
 <template>
-    <td v-if="extConfig && isLoaded" class="js-expand" :class="distinguishClassName">
+    <td v-if="extConfig && isLoaded && config.parent" class="js-expand" :class="distinguishClassName">
         <dl>
             <ParentDropdown
                 v-bind="{
