@@ -7,31 +7,19 @@
             :data-ext_type="$attrs.ext_type"
             :data-default_value="$attrs.default_value"
         >
-            <ExtText v-if="flagToLoadOnce" :name="$attrs.name" :value="$attrs.value" />
+            <ExtText v-if="flagToLoadOnce" :name="$attrs.name" :value="$attrs.value" :item="$attrs" />
         </dd>
     </div>
 </template>
 
 <script>
+import BaseMixin from './baseMixin.js';
 export default {
-    props: {
-        isLoaded: { type: Boolean, required: true },
-    },
+    mixins: [BaseMixin],
     data() {
         return {
-            flagToLoadOnce: false,
+            extComponentName: 'ExtText',
         };
-    },
-    watch: {
-        isLoaded: {
-            immediate: true,
-            handler(newVal) {
-                if (newVal && !this.flagToLoadOnce) {
-                    this.$options.components.ExtText = window['common/components/extensions/ExtText'];
-                    this.flagToLoadOnce = true;
-                }
-            },
-        },
     },
 };
 </script>

@@ -13,25 +13,13 @@
 </template>
 
 <script>
+import BaseMixin from './baseMixin.js';
 export default {
-    props: {
-        isLoaded: { type: Boolean, required: true },
-    },
+    mixins: [BaseMixin],
     data() {
         return {
-            flagToLoadOnce: false,
+            extComponentName: 'ExtDate',
         };
-    },
-    watch: {
-        isLoaded: {
-            immediate: true,
-            handler(newVal) {
-                if (newVal && !this.flagToLoadOnce) {
-                    this.$options.components.ExtDate = window['common/components/extensions/ExtDate'];
-                    this.flagToLoadOnce = true;
-                }
-            },
-        },
     },
 };
 </script>

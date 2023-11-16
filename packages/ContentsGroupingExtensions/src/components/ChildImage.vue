@@ -42,15 +42,12 @@
  * @todo: Check that script_data props
  */
 import { globalState } from '@/common/global-state';
+import BaseMixin from './baseMixin.js';
 export default {
-    props: {
-        isLoaded: { type: Boolean, required: true },
-        is_primary: { type: Boolean, required: true },
-        topics_group_id: { type: Number, required: true },
-    },
+    mixins: [BaseMixin],
     data() {
         return {
-            flagToLoadOnce: false,
+            extComponentName: 'ExtImage',
         };
     },
     computed: {
@@ -62,17 +59,6 @@ export default {
         },
         siteLang() {
             return globalState.siteLang;
-        },
-    },
-    watch: {
-        isLoaded: {
-            immediate: true,
-            handler(newVal) {
-                if (newVal && !this.flagToLoadOnce) {
-                    this.$options.components.ExtImage = window['common/components/extensions/ExtImage'];
-                    this.flagToLoadOnce = true;
-                }
-            },
         },
     },
 };

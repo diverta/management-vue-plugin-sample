@@ -21,19 +21,9 @@
 </template>
 
 <script>
-/**
- * README:
- *      Please change ckfinder_path domain to your own Kuroco admin domain.
- */
+import BaseMixin from './baseMixin.js';
 export default {
-    props: {
-        isLoaded: { type: Boolean, required: true },
-    },
-    data() {
-        return {
-            flagToLoadOnce: false,
-        };
-    },
+    mixins: [BaseMixin],
     computed: {
         opts() {
             if (Array.isArray(this.$attrs.options) || !this.$attrs.options) {
@@ -42,16 +32,10 @@ export default {
             return this.$attrs.options;
         },
     },
-    watch: {
-        isLoaded: {
-            immediate: true,
-            handler(newVal) {
-                if (newVal && !this.flagToLoadOnce) {
-                    this.$options.components.ExtFileManager = window['common/components/extensions/ExtFileManager'];
-                    this.flagToLoadOnce = true;
-                }
-            },
-        },
+    data() {
+        return {
+            extComponentName: 'ExtFileManager',
+        };
     },
 };
 </script>
