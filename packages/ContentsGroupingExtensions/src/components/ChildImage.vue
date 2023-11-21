@@ -11,7 +11,7 @@
                 v-if="flagToLoadOnce"
                 :name="$attrs.name"
                 :lang="siteLang"
-                :is_primary="is_primary"
+                :is_primary="true"
                 :value="$attrs.value"
                 :uploader_url="
                     '/direct/topics/file_upload/width=' +
