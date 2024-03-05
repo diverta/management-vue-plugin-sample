@@ -27,6 +27,7 @@
                             topics_group_id,
                             is_primary: is_primary,
                             isLoaded: isLoaded,
+                            key: `comp-${childConfig.no}`,
                         }"
                     />
                 </div>
