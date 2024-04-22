@@ -11,7 +11,7 @@
                 v-if="flagToLoadOnce"
                 :name="$attrs.name"
                 :value="values"
-                :item="$attrs"
+                :item="item"
                 :TOPICS_MULTISELECT_BORDER_CHECKBOX="50"
             />
         </dd>
@@ -29,7 +29,13 @@ export default {
     },
     computed: {
         values() {
-            return this.$attrs.value.map((item) => item.key);
+            return Object.entries(this.$attrs.value).map(([key]) => key);
+        },
+        item() {
+            return {
+                ...this.$attrs,
+                options: Object.entries(this.$attrs.options).map(([key, value]) => ({ key, value })),
+            };
         },
     },
 };
