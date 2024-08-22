@@ -7,7 +7,7 @@
             :data-ext_type="$attrs.ext_type"
             :data-default_value="$attrs.default_value"
         >
-            <ExtSelectbox v-if="flagToLoadOnce" :name="$attrs.name" :value="$attrs.value" :item="$attrs" />
+            <ExtSelectbox v-if="flagToLoadOnce" :name="$attrs.name" :value="values" :item="item" />
         </dd>
     </div>
 </template>
@@ -20,6 +20,17 @@ export default {
         return {
             extComponentName: 'ExtSelectbox',
         };
+    },
+    computed: {
+        values() {
+            return Object.entries(this.$attrs.value).map(([key]) => key);
+        },
+        item() {
+            return {
+                ...this.$attrs,
+                options: Object.entries(this.$attrs.options).map(([key, value]) => ({ key, value })),
+            };
+        },
     },
 };
 </script>
