@@ -7,7 +7,7 @@
             :data-ext_type="$attrs.ext_type"
             :data-default_value="$attrs.default_value"
         >
-            <ExtSelectbox v-if="flagToLoadOnce" :name="$attrs.name" :value="values" :item="item" />
+            <ExtSelectbox v-if="flagToLoadOnce" :name="$attrs.name" :value="$attrs.value" :item="item" />
         </dd>
     </div>
 </template>
@@ -22,9 +22,6 @@ export default {
         };
     },
     computed: {
-        values() {
-            return Object.entries(this.$attrs.value).map(([key]) => key);
-        },
         item() {
             return {
                 ...this.$attrs,
