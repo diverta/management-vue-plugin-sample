@@ -12,6 +12,7 @@
                 }"
                 :class="`ext_item_${config.parent.ext_index}`"
                 @change="(ids) => (selectedIDs = ids)"
+                @changeMainId="(selectedId) => (selectedTopId = selectedId)"
             >
                 <div
                     v-for="childConfig in config.children"
@@ -28,7 +29,9 @@
                             is_primary: is_primary,
                             isLoaded: isLoaded,
                             key: `comp-${childConfig.no}`,
+                            topSelected: selectedTopId,
                         }"
+                        v-bind:is="'div'"
                     />
                 </div>
             </ParentDropdown>
@@ -92,11 +95,13 @@ export default {
             import(/* webpackChunkName: "ChildRelationField" */ '@/components/ChildRelationField.vue'),
         ChildHtml: () => import(/* webpackChunkName: "ChildHtml" */ '@/components/ChildHtml.vue'),
         ChildDate: () => import(/* webpackChunkName: "ChildDate" */ '@/components/ChildDate.vue'),
+        ChildCsvtable: () => import(/* webpackChunkName: "ChildCsvtable" */ '@/components/ChildCsvtable.vue'),
     },
     data() {
         return {
             EXT_TYPE,
             selectedIDs: [],
+            selectedTopId: '',
             // in order to determine what the index number the current component is (within iteratable extension), see `mounted()`.
             distinguishClassName: 'js__contents-grouping-extension',
             extOptions: [],
@@ -308,6 +313,7 @@ export default {
                 'Image',
                 'FileManager',
                 'Location',
+                'Csvtable',
             ];
             // Remove component from coreComponents when it is already loaded.
             coreComponents.forEach((component) => {

@@ -8,6 +8,28 @@
             :data-default_value="$attrs.default_value"
         >
             <select
+                v-if="$attrs.type === '29'"
+                :name="$attrs.name"
+                @change="emitChildrenIDs"
+                ref="select"
+                v-model="selected"
+                class="form-control w-auto"
+            >
+                <option v-if="!required" value="" selected>選択なし</option>
+                <option
+                    v-for="({ key, value, label }, idx) in getMasterOptions"
+                    :key="`${key}_${idx}`"
+                    :label="label"
+                    :data-key="`${key}_${idx}`"
+                    :value="key"
+                    :data-value="value"
+                >
+                    {{ label }}
+                </option>
+            </select>
+
+            <select
+                v-else
                 :name="$attrs.name"
                 @change="emitChildrenIDs"
                 ref="select"
@@ -33,6 +55,8 @@
 </template>
 
 <script>
+import { GlobalEvent } from '@/common/globals';
+
 export default {
     props: {
         extOptions: { type: Array, default: () => [] },
@@ -47,11 +71,25 @@ export default {
         required() {
             return this.$attrs.limits && this.$attrs.limits.required !== undefined;
         },
+        getMasterOptions() {
+            return Object.keys(this.$attrs.options).map((key) => {
+                const value = this.$attrs.options[key];
+                return {
+                    key: key,
+                    value: key.replace(/\d+-/, ''),
+                    label: value,
+                };
+            });
+        },
     },
     methods: {
         emitChildrenIDs() {
-            const d = this.$refs?.select?.selectedOptions?.[0]?.dataset?.value?.split(',') || [];
+            const d = this.$refs?.select?.selectedOptions?.[0]?.dataset?.value?.replace(/\d+-/, '').split(',') || [];
+            const id = this.$attrs.ext_col_nm + (this.$attrs.repeatCnt >= 0 ? '_' + this.$attrs.repeatCnt : '');
+
+            GlobalEvent.dispatch(`ExtCsvtable.update.${id}`, this.selected);
             this.$emit('change', d);
+            this.$emit('changeMainId', this.selected);
         },
         getSelectedValue() {
             const selected = this.$attrs.default_value || this.$attrs.value || '';
@@ -59,7 +97,9 @@ export default {
             if (selected === '') {
                 return selected;
             }
-            return this.extOptions?.find(({ key }) => key === selected)?.key || '';
+            return this.$attrs.type === '29'
+                ? this.getMasterOptions?.find(({ key }) => key === selected)?.key || ''
+                : this.extOptions?.find(({ key }) => key === selected)?.key || '';
         },
     },
     mounted() {

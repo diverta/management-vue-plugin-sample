@@ -17,6 +17,7 @@ export const EXT_TYPE = {
     Html: 21,
     // ApiField: 32,
     // Counter: 34,
+    Csvtable: 29,
 };
 
 export const getExtTypeByValue = (value) => {
