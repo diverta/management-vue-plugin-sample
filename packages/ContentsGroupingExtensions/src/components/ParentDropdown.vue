@@ -17,7 +17,7 @@
             >
                 <option v-if="!required" value="" selected>選択なし</option>
                 <option
-                    v-for="({ key, value, label }, idx) in getMasterOptions"
+                    v-for="({ key, value, label }, idx) in masterOptions"
                     :key="`${key}_${idx}`"
                     :label="label"
                     :data-key="`${key}_${idx}`"
@@ -60,29 +60,39 @@ import { GlobalEvent } from '@/common/globals';
 export default {
     props: {
         extOptions: { type: Array, default: () => [] },
+        use_slugs: { type: Boolean, default: false },
+        extConfig: { type: Array, default: () => [] },
     },
     data() {
         return {
             selected: '',
             observer: null,
+            masterOptions: null,
         };
     },
     computed: {
         required() {
             return this.$attrs.limits && this.$attrs.limits.required !== undefined;
         },
+    },
+    methods: {
         getMasterOptions() {
-            return Object.keys(this.$attrs.options).map((key) => {
+            this.masterOptions = Object.keys(this.$attrs.options).map((key) => {
                 const value = this.$attrs.options[key];
+                const slugs = key.replace(/\d+-/, '').split(',');
+                const idsFromSlugs = slugs.map((slug) => {
+                    return this.extConfig.filter((data) => {
+                        return data.ext_slug === slug || data.ext_index == slug;
+                    })[0]?.ext_index;
+                });
+
                 return {
                     key: key,
-                    value: key.replace(/\d+-/, ''),
+                    value: idsFromSlugs.join(','),
                     label: value,
                 };
             });
         },
-    },
-    methods: {
         emitChildrenIDs() {
             const d = this.$refs?.select?.selectedOptions?.[0]?.dataset?.value?.replace(/\d+-/, '').split(',') || [];
             const id = this.$attrs.ext_col_nm + (this.$attrs.repeatCnt >= 0 ? '_' + this.$attrs.repeatCnt : '');
@@ -98,11 +108,12 @@ export default {
                 return selected;
             }
             return this.$attrs.type === '29'
-                ? this.getMasterOptions?.find(({ key }) => key === selected)?.key || ''
+                ? this.masterOptions?.find(({ key }) => key === selected)?.key || ''
                 : this.extOptions?.find(({ key }) => key === selected)?.key || '';
         },
     },
     mounted() {
+        this.getMasterOptions();
         this.selected = this.getSelectedValue();
         this.$nextTick(() => {
             if (this.selected) {

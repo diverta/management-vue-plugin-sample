@@ -9,6 +9,7 @@
                 v-bind="{
                     ...config.parent,
                     extOptions,
+                    extConfig,
                 }"
                 :class="`ext_item_${config.parent.ext_index}`"
                 @change="(ids) => (selectedIDs = ids)"
