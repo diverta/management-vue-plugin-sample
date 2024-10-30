@@ -9,6 +9,7 @@
                 v-bind="{
                     ...config.parent,
                     extOptions,
+                    reverse_index_order,
                 }"
                 :class="`ext_item_${config.parent.ext_index}`"
                 @change="(ids) => (selectedIDs = ids)"
@@ -74,6 +75,7 @@ export default {
         extConfig: { type: Array, required: true },
         topics_group_id: { type: Number, required: true },
         preserve_keys_endpoint: { type: String, default: null },
+        reverse_index_order: { type: Boolean, default: false },
         debug: { type: Boolean, default: false },
     },
     components: {
@@ -170,7 +172,7 @@ export default {
                 .filter(([keyDef, label]) => keyDef && label)
                 .map(([key, label]) => ({
                     key,
-                    value: key.replace(/\d+-/, ''),
+                    value: this.reverse_index_order ? key.replace(/-\d+/, '') : key.replace(/\d+-/, ''),
                     label,
                 }));
 
