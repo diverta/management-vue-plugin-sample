@@ -14,7 +14,7 @@
                 :file_url="$attrs.file_url"
                 :opts="opts"
                 :ext_help_msg="$attrs.ext_help_msg"
-                :ckfinder_path="`${window.location.origin}/management/wysiwyg/ckfinder/3.5.1/standalone.php`"
+                :ckfinder_path="ckfinderPath"
             />
         </dd>
     </div>
@@ -30,6 +30,11 @@ export default {
                 return {};
             }
             return this.$attrs.options;
+        },
+        ckfinderPath() {
+            return typeof window !== 'undefined'
+                ? `${window.location.origin}/management/wysiwyg/ckfinder/3.5.1/standalone.php`
+                : '/management/wysiwyg/ckfinder/3.5.1/standalone.php';
         },
     },
     data() {
