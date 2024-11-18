@@ -7,9 +7,10 @@
         "jest/globals": true
     },
     "parserOptions": {
-        "parser": "babel-eslint",
+        "parser": "@babel/eslint-parser",
         "sourceType": "module",
-        "ecmaVersion": 8
+        "ecmaVersion": 8,
+        "requireConfigFile": false
     },
     "plugins": ["jest"],
     "extends": [
