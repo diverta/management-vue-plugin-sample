@@ -1,0 +1,35 @@
+{
+  "env": {
+    "browser": true,
+    "node": true,
+    "es6": true,
+    "jest/globals": true
+  },
+  "parserOptions": {
+    "sourceType": "module"
+  },
+  "plugins": ["jest"],
+  "extends": [
+    "plugin:vue/essential",
+    "eslint:recommended",
+    "plugin:jest/recommended",
+    "plugin:prettier/recommended"
+  ],
+  "rules": {
+    "no-console": "warn",
+    "no-var": "error",
+    "prefer-const": "error",
+    "no-async-promise-executor": "off",
+    "no-misleading-character-class": "off",
+    "no-prototype-builtins": "off",
+    "no-shadow-restricted-names": "off",
+    "no-useless-catch": "off",
+    "no-with": "off",
+    "require-atomic-updates": "off",
+    "vue/no-mutating-props": "off",
+    "vue/valid-v-slot": "off",
+    "vue/require-valid-default-prop": "off",
+    "vue/no-reserved-component-names": "off",
+    "vue/multi-word-component-names": "off"
+  }
+}
