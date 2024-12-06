@@ -1,11 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 const { DefinePlugin } = require('webpack');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 
 const config = require('./rcms-js.config.js');
@@ -13,8 +10,6 @@ const pages = require('./pages.config.js');
 
 const production = process.env.WEBPACK_MODE === 'production';
 const serve = process.env.WEBPACK_DEV_SERVER;
-
-const eslintNoFail = !production && process.env.RCMS_ESLINT_NO_FAIL_DEV;
 
 const protocol = config.https ? 'https' : 'http';
 
@@ -36,23 +31,27 @@ module.exports = {
                 test: /\.(js|vue)$/,
                 loader: 'eslint-loader',
                 options: {
-                    failOnError: !eslintNoFail,
-                    emitWarning: eslintNoFail,
+                    failOnError: production,
+                    emitWarning: !production,
                 },
                 exclude: /node_modules/,
             },
             {
-                test: /.vue$/,
+                test: /\.vue$/,
                 loader: 'vue-loader',
             },
             {
-                test: /.js$/,
+                test: /\.js$/,
                 exclude: /node_modules/,
                 loader: 'babel-loader',
             },
             {
                 test: /\.css$/,
-                use: [production ? MiniCssExtractPlugin.loader : 'vue-style-loader', 'css-loader', 'postcss-loader'],
+                use: [
+                    'vue-style-loader', // CSS を JavaScript にインライン化
+                    'css-loader',
+                    'postcss-loader',
+                ],
             },
             {
                 test: /\.(png|jpe?g|gif|svg|woff2?|eot|ttf|otf)$/,
@@ -69,11 +68,7 @@ module.exports = {
             rcms_js_config: JSON.stringify(config),
         }),
         new VueLoaderPlugin(),
-        new CleanWebpackPlugin(),
-        new ManifestPlugin({ publicPath: '' }),
-        new MiniCssExtractPlugin({
-            filename: serve ? '[name].[hash].css' : '[name].[contenthash].css',
-        }),
+        new ManifestPlugin({ publicPath: '' }), // CSS を別ファイルにしない設定
     ],
     optimization: {
         minimizer: [
@@ -86,10 +81,6 @@ module.exports = {
                         beautify: false,
                     },
                 },
-            }),
-            new OptimizeCSSAssetsPlugin({
-                cssProcessor: require('cssnano'),
-                cssProcessorOptions: { discardComments: { removeAll: true } },
             }),
         ],
         splitChunks: {

@@ -1,6 +1,6 @@
 <template>
-    <div>
-        <h1>Vue Sample</h1>
+    <div class="vue-sample">
+        <h1>VUE Sample</h1>
         <ul>
             <li v-for="item in items" :key="item.topics_id">
                 {{ item.subject }}
@@ -39,3 +39,11 @@ export default {
     computed: {},
 };
 </script>
+
+<style scoped>
+.vue-sample h1 {
+    font-size: 24px;
+    color: #007bff;
+    margin-bottom: 10px;
+}
+</style>
