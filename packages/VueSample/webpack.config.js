@@ -4,6 +4,9 @@ const { DefinePlugin } = require('webpack');
 const TerserPlugin = require('terser-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
 const config = require('./rcms-js.config.js');
 const pages = require('./pages.config.js');
@@ -47,11 +50,12 @@ module.exports = {
             },
             {
                 test: /\.css$/,
-                use: [
-                    'vue-style-loader', // CSS を JavaScript にインライン化
-                    'css-loader',
-                    'postcss-loader',
-                ],
+                // use: [
+                //     'vue-style-loader', // CSS を JavaScript にインライン化
+                //     'css-loader',
+                //     'postcss-loader',
+                // ],
+                use: [production ? MiniCssExtractPlugin.loader : 'vue-style-loader', 'css-loader', 'postcss-loader'],
             },
             {
                 test: /\.(png|jpe?g|gif|svg|woff2?|eot|ttf|otf)$/,
@@ -68,6 +72,11 @@ module.exports = {
             rcms_js_config: JSON.stringify(config),
         }),
         new VueLoaderPlugin(),
+        new CleanWebpackPlugin(),
+        new ManifestPlugin({ publicPath: '' }),
+        new MiniCssExtractPlugin({
+            filename: serve ? '[name].[hash].css' : '[name].[contenthash].css',
+        }),
         new ManifestPlugin({ publicPath: '' }), // CSS を別ファイルにしない設定
     ],
     optimization: {
@@ -81,6 +90,10 @@ module.exports = {
                         beautify: false,
                     },
                 },
+            }),
+            new OptimizeCSSAssetsPlugin({
+                cssProcessor: require('cssnano'),
+                cssProcessorOptions: { discardComments: { removeAll: true } },
             }),
         ],
         splitChunks: {
