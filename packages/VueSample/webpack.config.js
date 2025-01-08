@@ -50,12 +50,7 @@ module.exports = {
             },
             {
                 test: /\.css$/,
-                // use: [
-                //     'vue-style-loader', // CSS を JavaScript にインライン化
-                //     'css-loader',
-                //     'postcss-loader',
-                // ],
-                use: [production ? MiniCssExtractPlugin.loader : 'vue-style-loader', 'css-loader', 'postcss-loader'],
+                use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader'],
             },
             {
                 test: /\.(png|jpe?g|gif|svg|woff2?|eot|ttf|otf)$/,
@@ -77,7 +72,6 @@ module.exports = {
         new MiniCssExtractPlugin({
             filename: serve ? '[name].[hash].css' : '[name].[contenthash].css',
         }),
-        new ManifestPlugin({ publicPath: '' }), // CSS を別ファイルにしない設定
     ],
     optimization: {
         minimizer: [
@@ -92,8 +86,10 @@ module.exports = {
                 },
             }),
             new OptimizeCSSAssetsPlugin({
-                cssProcessor: require('cssnano'),
-                cssProcessorOptions: { discardComments: { removeAll: true } },
+                assetNameRegExp: /\.css$/g,
+                cssProcessorOptions: {
+                    discardComments: { removeAll: false },
+                },
             }),
         ],
         splitChunks: {
