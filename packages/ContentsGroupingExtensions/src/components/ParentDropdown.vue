@@ -3,7 +3,7 @@
         <dt>{{ $attrs.ext_title }}</dt>
         <dd
             class="multi_dd"
-            :class="`ext_item_${$attrs.ext_index - 1}`"
+            :class="`ext_item_0`"
             :data-ext_type="$attrs.ext_type"
             :data-default_value="$attrs.default_value"
         >

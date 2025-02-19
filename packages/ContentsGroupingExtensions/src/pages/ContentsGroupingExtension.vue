@@ -15,9 +15,9 @@
                 @change="(ids) => (selectedIDs = ids)"
             >
                 <div
-                    v-for="childConfig in config.children"
+                    v-for="(childConfig, index) in config.children"
                     :key="childConfig.no"
-                    :class="`ext_item_${childConfig.ext_index}`"
+                    :class="`ext_item_${index + 1}`"
                 >
                     <!-- eslint-disable-next-line vue/require-component-is -->
                     <component
