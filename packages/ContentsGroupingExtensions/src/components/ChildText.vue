@@ -7,7 +7,13 @@
             :data-ext_type="$attrs.ext_type"
             :data-default_value="$attrs.default_value"
         >
-            <ExtText v-if="flagToLoadOnce" :name="$attrs.name" :value="$attrs.value" :item="$attrs" />
+            <ExtText
+                v-if="flagToLoadOnce"
+                :name="$attrs.name"
+                :value="$attrs.value"
+                :item="$attrs"
+                :ext_help_msg="$attrs.ext_help_msg"
+            />
         </dd>
     </div>
 </template>
