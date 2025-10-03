@@ -20,7 +20,7 @@
                 :delay="0"
                 :lang="siteLang"
                 ckfinder="/management/wysiwyg"
-                script_path="/management/wysiwyg/ckfinder/3.5.1/ckfinder.js"
+                script_path="/management/wysiwyg/ckfinder/3.7.0/ckfinder.js"
             />
         </dd>
     </div>
