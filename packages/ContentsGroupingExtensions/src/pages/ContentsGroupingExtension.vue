@@ -63,6 +63,9 @@ import { globalState } from '@/common/global-state';
 window.scriptLoadingTracker = window.scriptLoadingTracker || {};
 // Same as above, but for kuroco core manifest
 window.kurocoCoreManifestLoadingTracker = window.kurocoCoreManifestLoadingTracker || {};
+// Global array to track Vue instances for stable index calculation
+// This prevents race conditions from DOM-based querySelectorAll() approach
+window.__contentsGroupingExtensionInstances = window.__contentsGroupingExtensionInstances || [];
 
 const axios = setupCache(Axios);
 
@@ -257,9 +260,11 @@ export default {
         this.$store = store;
     },
     async mounted() {
-        // since multiple custom components do not have its index number, gets it from CSS picking.
-        const iteratableSelfComponentIndex =
-            window.document.querySelectorAll(`.${this.distinguishClassName}`).length - 1;
+        // Register this instance to the global array for stable index calculation
+        // This prevents race conditions from DOM-based querySelectorAll() approach
+        window.__contentsGroupingExtensionInstances.push(this);
+        const iteratableSelfComponentIndex = window.__contentsGroupingExtensionInstances.indexOf(this);
+
         this.extConfig = this.extConfig.map((extConfig) =>
             this.getExtConfigWithStoredValue(extConfig, iteratableSelfComponentIndex)
         );
@@ -345,6 +350,14 @@ export default {
             this.isLoaded = true;
         } catch (error) {
             console.error(`Failed to load script: ${error}`);
+        }
+    },
+    beforeDestroy() {
+        // Remove this instance from the global array when component is destroyed
+        // This prevents memory leaks and maintains index consistency
+        const index = window.__contentsGroupingExtensionInstances.indexOf(this);
+        if (index > -1) {
+            window.__contentsGroupingExtensionInstances.splice(index, 1);
         }
     },
 };

@@ -78,7 +78,10 @@ export default {
                 const { height, width } = entry.contentRect;
                 return height === 0 && width === 0;
             });
-            invisible && this.$emit('change', []); // reset value
+            if (invisible) {
+                this.selected = ''; // Reset Vue model to prevent value restoration
+                this.$emit('change', []); // Reset selectedIDs
+            }
         });
         this.observer.observe(this.$refs.root);
     },
