@@ -15,8 +15,8 @@
                 :source_id="`code-source--` + $attrs.name"
                 id=""
                 :simplified="true"
-                :width="$attrs.options.width ? $attrs.options.width : '800px'"
-                :height="$attrs.options.height ? $attrs.options.height : '450px'"
+                :width="$attrs.options.width ? $attrs.options.width : '100%'"
+                :height="$attrs.options.height ? $attrs.options.height : '450'"
                 :dont_use_editor="!!$attrs.options.dont_use_editor"
                 :ext_help_msg="$attrs.ext_help_msg"
             />
